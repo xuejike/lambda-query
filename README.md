@@ -7,13 +7,18 @@
 #### 安装教程
 
 1. 使用Spring-starter进行安装
+```groovy
+repositories {
 
+    maven { url 'https://jitpack.io' }
+
+}
+```
 2. 手动安装
 2.1. 引入依赖
-```xml
-```
-```groovy
 
+```groovy
+com.github.xuejike.jpa-lambda-query:jpa-lambda-starter:0.1
 ```
 2.2. 初始化
 ```java
