@@ -37,13 +37,15 @@ public class HomeController {
 
         //加载关联属性
 
-        List<User> list1 = JpaQuerys.lambda(User.class, session)
+        List<User> list1 = JpaQuerys.lambda(User.class, entityManager)
                 .eq(User::getUsername, "123")
-                .orEq(User::getUsername, "456")
                 .loadJoin(User::getDept).list();
 
+        Page<User> userPage = JpaQuerys
+                .lambda(User.class, entityManager)
+                .pageList(new Page(1, 10));
         //关联属性查询
-        List<User> list2 = JpaQuerys.lambda(User.class, session)
+        List<User> list2 = JpaQuerys.lambda(User.class, entityManager)
                 .subQuery(User::getDept, lambda -> lambda.eq(Dept::getId, 1)).list();
 
 //        分页查询
