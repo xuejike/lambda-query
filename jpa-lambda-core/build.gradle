@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.hibernate:hibernate-core:5.0.2.Final'
+    compileOnly 'org.hibernate:hibernate-core:5.0.2.Final'
     compile 'cglib:cglib:3.2.4'
     compile 'commons-beanutils:commons-beanutils:1.9.3'
     testCompile group: 'junit', name: 'junit', version: '4.12'

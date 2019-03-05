@@ -23,8 +23,7 @@ public class HomeController {
     @RequestMapping("/index")
     @ResponseBody
     public String index(){
-        JpaQuerys.setEntityManager(entityManager);
-
+//        JpaQuerys.setEntityManager(entityManager);
         //正常查询
         JpaLambdaQuery<User> userQuery =JpaQuerys.lambda(User.class);
         List<User> list = userQuery.eq(User::getUsername, "111")

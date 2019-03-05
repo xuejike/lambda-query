@@ -1,25 +1,29 @@
 package com.github.xuejike.query.jpa.lambda;
 
 import org.hibernate.Session;
+import org.hibernate.internal.SessionFactoryImpl;
 
 import javax.persistence.EntityManager;
 
 public class JpaQuerys {
 
-    protected static Session session;
+    protected static EntityManager entityManager;
 
-    public static void setSession(Session session) {
-        JpaQuerys.session = session;
+
+
+    public static void setEntityManager(EntityManager entityManager) {
+        JpaQuerys.entityManager = entityManager;
     }
-    public static void setEntityManager(EntityManager entityManager){
-        JpaQuerys.session = (Session)entityManager.getDelegate();
+
+    protected static Session getSession(){
+        return ((Session) entityManager.getDelegate());
     }
 
     public static <T> JpaQuery<T> query(Class<T> entityCls, Session session){
         return new JpaQuery<T>(entityCls,session);
     }
     public static <T> JpaQuery<T> query(Class<T> entityCls){
-        return new JpaQuery<T>(entityCls,session);
+        return new JpaQuery<T>(entityCls,getSession());
     }
     public static <T> JpaQuery<T> query(Class<T> entityCls, EntityManager entityManager){
         return query(entityCls, (Session) entityManager.getDelegate());
@@ -32,6 +36,6 @@ public class JpaQuerys {
         return new JpaLambdaQuery<>(entityCls,session);
     }
     public static <T> JpaLambdaQuery<T> lambda(Class<T> entityCls){
-        return new JpaLambdaQuery<>(entityCls,session);
+        return new JpaLambdaQuery<>(entityCls,getSession());
     }
 }
