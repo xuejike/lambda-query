@@ -23,9 +23,10 @@ public class HomeController {
     @RequestMapping("/index")
     @ResponseBody
     public String index(){
-        Session session = (Session) entityManager.getDelegate();
+        JpaQuerys.setEntityManager(entityManager);
+
         //正常查询
-        JpaLambdaQuery<User> userQuery = new JpaLambdaQuery<>(User.class, session);
+        JpaLambdaQuery<User> userQuery =JpaQuerys.lambda(User.class);
         List<User> list = userQuery.eq(User::getUsername, "111")
                 .gt(User::getCreateTime, LocalDateTime.now())
                 .list();
@@ -37,7 +38,7 @@ public class HomeController {
 
         //加载关联属性
 
-        List<User> list1 = JpaQuerys.lambda(User.class, entityManager)
+        List<User> list1 = JpaQuerys.lambda(User.class)
                 .eq(User::getUsername, "123")
                 .loadJoin(User::getDept).list();
 
@@ -45,11 +46,11 @@ public class HomeController {
                 .lambda(User.class, entityManager)
                 .pageList(new Page(1, 10));
         //关联属性查询
-        List<User> list2 = JpaQuerys.lambda(User.class, entityManager)
+        List<User> list2 = JpaQuerys.lambda(User.class)
                 .subQuery(User::getDept, lambda -> lambda.eq(Dept::getId, 1)).list();
 
 //        分页查询
-        Page<Dept> u1 = new JpaLambdaQuery<Dept>(Dept.class, session)
+        Page<Dept> u1 = JpaQuerys.lambda(Dept.class)
                 .subQuery(Dept::getUserList, User.class, lambda -> lambda.eq(User::getUsername, "u1"))
                 .pageList(new Page(1, 10, true));
         return "--";
