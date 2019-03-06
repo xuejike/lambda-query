@@ -1,4 +1,5 @@
-# jpa-lambda-query[![](https://jitpack.io/v/xuejike/jpa-lambda-query.svg)](https://jitpack.io/#xuejike/jpa-lambda-query)
+# jpa-lambda-query
+[![](https://jitpack.io/v/xuejike/jpa-lambda-query.svg)](https://jitpack.io/#xuejike/jpa-lambda-query)
 
 
 #### 介绍
