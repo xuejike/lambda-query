@@ -10,6 +10,7 @@ import org.hibernate.criterion.MatchMode;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
@@ -17,6 +18,7 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
         WhereCriteria<JpaLambdaQuery<T>, FieldFunction<T,?>>,
         OrderCriteria<JpaLambdaQuery<T>, FieldFunction<T,?>>,
         LoadJoinCriteria<JpaLambdaQuery<T>, FieldFunction<T,?>>,
+        ExampleCriteria<T,JpaLambdaQuery<T>, FieldFunction<T,?>>,
         OrAndWhereCriteria<JpaLambdaQuery<T>, FieldFunction<T,?>> {
     GeterSeterMethodInterceptor proxyInterceptor = new GeterSeterMethodInterceptor();
     private T proxy;
@@ -38,13 +40,16 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
         return proxyInterceptor.getLastPropertyName();
     }
     protected String[] getFieldNames(FieldFunction<T, ?> ...fieldFun){
-        String[] fieldNames = new String[fieldFun.length];
-        for (int i = 0; i < fieldFun.length; i++) {
-            fieldFun[i].apply(proxy);
-            fieldNames[i] = proxyInterceptor.getLastPropertyName();
-        }
-
-        return fieldNames;
+        return Optional.ofNullable(fieldFun)
+                .filter(f->f.length>0)
+                .map(f->{
+                    String[] fieldNames = new String[fieldFun.length];
+                    for (int i = 0; i < fieldFun.length; i++) {
+                        fieldFun[i].apply(proxy);
+                        fieldNames[i] = proxyInterceptor.getLastPropertyName();
+                    }
+                    return fieldNames;
+                }).orElse(null);
     }
     @Override
     public <V> JpaLambdaQuery<T> ne(FieldFunction<T, ?> field, V val) {
@@ -246,6 +251,30 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
         String fieldName = getFieldName(field);
         Class<P> propertyClass = proxyInterceptor.getLastPropertyClass();
         subQuery(fieldName,propertyClass,subQueryFun);
+        return this;
+    }
+
+    @Override
+    public JpaLambdaQuery<T> example(T obj, MatchMode likeModel, FieldFunction<T, ?>... excludeProperties) {
+        jpaQuery.example(obj, likeModel, getFieldNames(excludeProperties));
+        return this;
+    }
+
+    @Override
+    public JpaLambdaQuery<T> example(T obj, MatchMode likeModel) {
+        example(obj,likeModel,null);
+        return this;
+    }
+
+    @Override
+    public JpaLambdaQuery<T> example(T obj) {
+        example(obj,null,null);
+        return this;
+    }
+
+    @Override
+    public JpaLambdaQuery<T> example(T obj, FieldFunction<T, ?>... excludeProperties) {
+        example(obj,null,excludeProperties);
         return this;
     }
 }

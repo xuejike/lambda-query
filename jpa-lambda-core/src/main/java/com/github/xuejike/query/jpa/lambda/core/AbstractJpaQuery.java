@@ -49,6 +49,7 @@ public abstract class AbstractJpaQuery<T> {
         Criteria criteria = session.createCriteria(entityCls);
         return createCriteria(criteria,countCriteria);
     }
+
     public Criteria createCriteria(Criteria criteria ,boolean countCriteria){
         //设置条件关系
         for (Criterion criterion : whereCriterionList) {
@@ -149,4 +150,6 @@ public abstract class AbstractJpaQuery<T> {
     public void setSubQueryName(String subQueryName) {
         this.subQueryName = subQueryName;
     }
+
+
 }

@@ -6,6 +6,7 @@ import org.hibernate.criterion.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -14,6 +15,7 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
         OrAndWhereCriteria<JpaQuery<T>,String>,
         OrderCriteria<JpaQuery<T>,String>,
         LoadJoinCriteria<JpaQuery<T>,String>,
+        ExampleCriteria<T,JpaQuery<T>,String>,
         SelectCriteria<JpaQuery<T>,String> {
 
 
@@ -336,5 +338,37 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
         return this;
     }
 
+    public JpaQuery<T> allEq(Map<String,Object> eqMap){
+        whereCriterionList.add(Restrictions.allEq(eqMap));
+        return this;
+    }
+    public JpaQuery<T> example(T obj,MatchMode likeModel,String ... excludeProperties){
+        Example example = Example.create(obj);
+        Optional.ofNullable(likeModel).ifPresent(example::enableLike);
+        Optional.ofNullable(excludeProperties)
+                .filter(e->e.length>0)
+                .ifPresent(e->{
+                    for (String s : e) {
+                        example.excludeProperty(s);
+                    }
+                });
 
+        whereCriterionList.add(example);
+        return this;
+    }
+
+    @Override
+    public JpaQuery<T> example(T obj, MatchMode likeModel) {
+        return example(obj,likeModel,null);
+    }
+
+    @Override
+    public JpaQuery<T> example(T obj) {
+        return example(obj,null,null);
+    }
+
+    @Override
+    public JpaQuery<T> example(T obj, String... excludeProperties) {
+        return example(obj,null,excludeProperties);
+    }
 }
