@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.hibernate.transform.Transformers;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -150,6 +151,7 @@ public abstract class AbstractJpaQuery<T> {
     public void setSubQueryName(String subQueryName) {
         this.subQueryName = subQueryName;
     }
+
 
 
 }
