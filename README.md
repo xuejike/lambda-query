@@ -16,7 +16,7 @@ repositories {
 }
 
 
-com.github.xuejike.jpa-lambda-query:jpa-lambda-starter:0.1
+com.github.xuejike.jpa-lambda-query:jpa-lambda-starter:0.1.2
 
 
 ```
@@ -24,7 +24,7 @@ com.github.xuejike.jpa-lambda-query:jpa-lambda-starter:0.1
 2.1. 引入依赖
 
 ```groovy
-com.github.xuejike.jpa-lambda-query:jpa-lambda-core:0.1.1
+com.github.xuejike.jpa-lambda-query:jpa-lambda-core:0.1.2
 ```
 2.2. 初始化
 ```java
