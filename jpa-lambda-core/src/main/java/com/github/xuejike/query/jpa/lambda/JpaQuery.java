@@ -31,12 +31,14 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
         JpaLambdaQuery<T> query = new JpaLambdaQuery<T>(this);
         return query;
     }
+    @Override
     public JpaQuery<T> orderAsc(String ...fields){
         for (String field : fields) {
             orderList.add(Order.asc(field));
         }
         return this;
     }
+    @Override
     public JpaQuery<T> orderDesc(String ...fields){
         for (String field : fields) {
             orderList.add(Order.desc(field));
@@ -60,17 +62,10 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
         return this;
     }
 
-    @Override
-    public JpaQuery<T> count(String field, String alias) {
-        Projection property = Projections.count(field);
-        if (alias != null){
-            property = ((CountProjection) property).as(alias);
-        }
-        selectProjectionList.add(property);
-        return this;
-    }
 
-    public JpaQuery<T> select(String field,String alias){
+
+    @Override
+    public JpaQuery<T> select(String field, String alias){
         Projection property = Projections.property(field);
         if (alias != null){
             property = ((PropertyProjection) property).as(alias);
@@ -342,7 +337,8 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
         whereCriterionList.add(Restrictions.allEq(eqMap));
         return this;
     }
-    public JpaQuery<T> example(T obj,MatchMode likeModel,String ... excludeProperties){
+    @Override
+    public JpaQuery<T> example(T obj, MatchMode likeModel, String ... excludeProperties){
         Example example = Example.create(obj);
         Optional.ofNullable(likeModel).ifPresent(example::enableLike);
         Optional.ofNullable(excludeProperties)

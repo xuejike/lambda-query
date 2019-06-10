@@ -119,6 +119,18 @@ public abstract class AbstractJpaQuery<T> {
 
         return page;
     }
+    public Long count(){
+        Long count = (Long) createCriteria(true)
+                .setProjection(Projections.rowCount())
+                .uniqueResult();
+        return count;
+    }
+    public Long count(String field){
+        Projection property = Projections.count(field);
+
+        Long count = (Long) createCriteria(true).setProjection(property).uniqueResult();
+        return count;
+    }
     public <E>List<E> getObjList(Class<E> dto){
         return createCriteria().setResultTransformer(Transformers.aliasToBean(dto)).list();
     }

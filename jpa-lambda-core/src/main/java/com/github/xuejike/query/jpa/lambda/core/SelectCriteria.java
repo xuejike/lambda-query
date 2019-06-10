@@ -9,10 +9,7 @@ public interface SelectCriteria<R,F> {
     default R distinct(F field){
         return distinct(field,null);
     }
-    R count(F field,F alias);
-    default R count(F field){
-        return count(field,null);
-    }
+
     R max(F field,F alias);
     default R max(F field){return max(field,null);}
 
