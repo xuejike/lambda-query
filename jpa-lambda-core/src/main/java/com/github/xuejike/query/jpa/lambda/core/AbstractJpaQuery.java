@@ -166,4 +166,17 @@ public abstract class AbstractJpaQuery<T> {
 
 
 
+
+    public Serializable save(T data){
+        return session.save(data);
+    }
+    public void saveOrUpdate(T data){
+        session.saveOrUpdate(data);
+    }
+
+    public void delete(T del){
+        session.delete(del);
+    }
+
+
 }

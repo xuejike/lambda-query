@@ -25,6 +25,7 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
     private JpaQuery<T> jpaQuery;
 
 
+
     public JpaLambdaQuery(JpaQuery<T> jpaQuery) {
         super(jpaQuery);
         this.jpaQuery = jpaQuery;

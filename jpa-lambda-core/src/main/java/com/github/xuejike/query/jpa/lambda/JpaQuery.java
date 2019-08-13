@@ -16,7 +16,8 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
         OrderCriteria<JpaQuery<T>,String>,
         LoadJoinCriteria<JpaQuery<T>,String>,
         ExampleCriteria<T,JpaQuery<T>,String>,
-        SelectCriteria<JpaQuery<T>,String> {
+        SelectCriteria<JpaQuery<T>,String>
+{
 
 
     public JpaQuery(Class<T> entityCls,Session session) {
