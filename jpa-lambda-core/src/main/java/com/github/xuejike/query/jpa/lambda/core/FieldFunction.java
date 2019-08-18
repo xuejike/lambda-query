@@ -1,5 +1,7 @@
 package com.github.xuejike.query.jpa.lambda.core;
 
-public interface FieldFunction<T,R> {
+import java.io.Serializable;
+
+public interface FieldFunction<T,R> extends Serializable {
     R apply(T entity);
 }

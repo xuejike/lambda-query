@@ -3,6 +3,7 @@ package com.github.xuejike.query.jpa.lambda;
 import com.github.xuejike.query.jpa.lambda.core.*;
 import com.github.xuejike.query.jpa.lambda.proxy.GeterSeterMethodInterceptor;
 import com.github.xuejike.query.jpa.lambda.proxy.Proxy;
+import com.github.xuejike.query.jpa.lambda.tool.LambdaTool;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
@@ -37,17 +38,18 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
     }
 
     protected String getFieldName(FieldFunction<T, ?> fieldFun){
-        fieldFun.apply(proxy);
-        return proxyInterceptor.getLastPropertyName();
+
+        String name = LambdaTool.getName(fieldFun);
+        return name;
     }
+
     protected String[] getFieldNames(FieldFunction<T, ?> ...fieldFun){
         return Optional.ofNullable(fieldFun)
                 .filter(f->f.length>0)
                 .map(f->{
                     String[] fieldNames = new String[fieldFun.length];
                     for (int i = 0; i < fieldFun.length; i++) {
-                        fieldFun[i].apply(proxy);
-                        fieldNames[i] = proxyInterceptor.getLastPropertyName();
+                        fieldNames[i] = getFieldName(fieldFun[i]);
                     }
                     return fieldNames;
                 }).orElse(null);
