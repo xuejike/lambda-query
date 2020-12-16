@@ -13,14 +13,9 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.xuejike.query.jpa.lambda.tool;
+package com.github.xuejike.query.core.tool.lambda;
 
-import com.github.xuejike.query.jpa.lambda.exception.JpaLambdaException;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
-import java.util.List;
+import com.github.xuejike.query.core.exception.LambdaQueryException;
 
 /**
  * <p>
@@ -46,7 +41,7 @@ public final class ClassUtils {
         try {
             return Class.forName(name);
         } catch (ClassNotFoundException e) {
-            throw new JpaLambdaException("找不到指定的class！请仅在明确确定会有 class 的时候，调用该方法", e);
+            throw new LambdaQueryException("找不到指定的class！请仅在明确确定会有 class 的时候，调用该方法", e);
         }
     }
 

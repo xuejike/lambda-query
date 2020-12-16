@@ -1,4 +1,4 @@
-package com.github.xuejike.query.jpa.lambda.core;
+package com.github.xuejike.query.core.criteria;
 
 public interface OrderCriteria<T,F> {
     T orderAsc(F ...fields);

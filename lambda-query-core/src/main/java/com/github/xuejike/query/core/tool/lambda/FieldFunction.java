@@ -1,4 +1,4 @@
-package com.github.xuejike.query.jpa.lambda.core;
+package com.github.xuejike.query.core.tool.lambda;
 
 import java.io.Serializable;
 

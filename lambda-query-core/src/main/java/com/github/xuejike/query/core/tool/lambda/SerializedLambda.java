@@ -13,11 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.github.xuejike.query.jpa.lambda.tool;
+package com.github.xuejike.query.core.tool.lambda;
 
 
-import com.github.xuejike.query.jpa.lambda.core.FieldFunction;
-import com.github.xuejike.query.jpa.lambda.exception.JpaLambdaException;
+import com.github.xuejike.query.core.exception.LambdaQueryException;
 
 import java.io.*;
 import java.util.regex.Matcher;
@@ -52,7 +51,7 @@ public class SerializedLambda implements Serializable {
      */
     public static SerializedLambda resolve(FieldFunction<?, ?> lambda) {
         if (!lambda.getClass().isSynthetic()) {
-            throw new JpaLambdaException("该方法仅能传入 lambda 表达式产生的合成类");
+            throw new LambdaQueryException("该方法仅能传入 lambda 表达式产生的合成类");
         }
         try (ObjectInputStream objIn = new ObjectInputStream(new
                 ByteArrayInputStream(SerializationUtils.serialize(lambda))) {
@@ -64,7 +63,7 @@ public class SerializedLambda implements Serializable {
         }) {
             return (SerializedLambda) objIn.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            throw new JpaLambdaException("This is impossible to happen", e);
+            throw new LambdaQueryException("This is impossible to happen", e);
         }
     }
 
@@ -121,7 +120,7 @@ public class SerializedLambda implements Serializable {
         if (matcher.find()) {
             return ClassUtils.toClassConfident(normalName(matcher.group("instantiatedMethodType")));
         }
-        throw new JpaLambdaException(String.format("无法从 %s 解析调用实例。。。", instantiatedMethodType));
+        throw new LambdaQueryException(String.format("无法从 %s 解析调用实例。。。", instantiatedMethodType));
     }
 
     /**

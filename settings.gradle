@@ -2,4 +2,5 @@ rootProject.name = 'jpa-lambda'
 include 'jpa-lambda-core'
 //include 'demo'
 include 'jpa-lambda-starter'
+include 'lambda-query-core'
 

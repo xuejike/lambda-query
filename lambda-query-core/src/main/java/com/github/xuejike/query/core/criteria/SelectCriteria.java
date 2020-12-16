@@ -1,4 +1,4 @@
-package com.github.xuejike.query.jpa.lambda.core;
+package com.github.xuejike.query.core.criteria;
 
 public interface SelectCriteria<R,F> {
     R select(F field,F alias);

@@ -1,6 +1,7 @@
-package com.github.xuejike.query.jpa.lambda.core;
+package com.github.xuejike.query.core.criteria;
 
-import org.hibernate.criterion.MatchMode;
+
+import com.github.xuejike.query.core.enums.StringMatchMode;
 
 import java.util.Collection;
 
@@ -18,7 +19,7 @@ public interface WhereCriteria<P,F> {
     <V>P lt(F field,V val);
     <V>P lte(F field,V val);
     <V>P like(F field,String val);
-    <V>P like(F field, String val, MatchMode matchMode);
+    <V>P like(F field, String val, StringMatchMode stringMatchMode);
     <V>P in(F field,V... val);
     <V>P notIn(F field,V... val);
     <V>P in(F field, Collection<V> val);

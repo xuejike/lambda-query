@@ -1,15 +1,19 @@
 package com.github.xuejike.query.jpa.lambda;
 
+import com.github.xuejike.query.core.criteria.ExampleCriteria;
+import com.github.xuejike.query.core.criteria.OrAndWhereCriteria;
+import com.github.xuejike.query.core.criteria.OrderCriteria;
+import com.github.xuejike.query.core.enums.StringMatchMode;
+import com.github.xuejike.query.core.exception.LambdaQueryException;
+import com.github.xuejike.query.core.tool.lambda.FieldFunction;
+import com.github.xuejike.query.core.criteria.WhereCriteria;
 import com.github.xuejike.query.jpa.lambda.core.*;
-import com.github.xuejike.query.jpa.lambda.proxy.GeterSeterMethodInterceptor;
-import com.github.xuejike.query.jpa.lambda.proxy.Proxy;
-import com.github.xuejike.query.jpa.lambda.tool.LambdaTool;
+import com.github.xuejike.query.core.tool.lambda.LambdaTool;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
+
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -21,8 +25,6 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
         LoadJoinCriteria<JpaLambdaQuery<T>, FieldFunction<T,?>>,
         ExampleCriteria<T,JpaLambdaQuery<T>, FieldFunction<T,?>>,
         OrAndWhereCriteria<JpaLambdaQuery<T>, FieldFunction<T,?>> {
-    GeterSeterMethodInterceptor proxyInterceptor = new GeterSeterMethodInterceptor();
-    private T proxy;
     private JpaQuery<T> jpaQuery;
 
 
@@ -30,7 +32,6 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
     public JpaLambdaQuery(JpaQuery<T> jpaQuery) {
         super(jpaQuery);
         this.jpaQuery = jpaQuery;
-        proxy = Proxy.proxy(entityCls, proxyInterceptor);
     }
 
     public JpaLambdaQuery(Class<T> entityCls,Session session) {
@@ -97,8 +98,8 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
     }
 
     @Override
-    public <V> JpaLambdaQuery<T> like(FieldFunction<T, ?> field, String val, MatchMode matchMode) {
-        jpaQuery.like(getFieldName(field),val,matchMode);
+    public <V> JpaLambdaQuery<T> like(FieldFunction<T, ?> field, String val, StringMatchMode stringMatchMode) {
+        jpaQuery.like(getFieldName(field),val, stringMatchMode);
         return this;
     }
 
@@ -252,26 +253,32 @@ public class JpaLambdaQuery<T> extends AbstractJpaQuery<T>
                                          Function<JpaLambdaQuery<P>,
                                                  JpaLambdaQuery<P>> subQueryFun){
         String fieldName = getFieldName(field);
-        Class<P> propertyClass = proxyInterceptor.getLastPropertyClass();
-        subQuery(fieldName,propertyClass,subQueryFun);
-        return this;
+
+        try {
+            Class<P> type = (Class<P>) entityCls.getField(fieldName).getType();
+            subQuery(fieldName,type,subQueryFun);
+            return this;
+        } catch (NoSuchFieldException e) {
+            throw new LambdaQueryException("获取属性失败",e);
+        }
+
     }
 
     @Override
-    public JpaLambdaQuery<T> example(T obj, MatchMode likeModel, FieldFunction<T, ?>... excludeProperties) {
+    public JpaLambdaQuery<T> example(T obj, StringMatchMode likeModel, FieldFunction<T, ?>... excludeProperties) {
         jpaQuery.example(obj, likeModel, getFieldNames(excludeProperties));
         return this;
     }
 
     @Override
-    public JpaLambdaQuery<T> example(T obj, MatchMode likeModel) {
-        example(obj,likeModel,null);
+    public JpaLambdaQuery<T> example(T obj, StringMatchMode likeModel) {
+        example(obj,likeModel,(FieldFunction)null);
         return this;
     }
 
     @Override
     public JpaLambdaQuery<T> example(T obj) {
-        example(obj,null,null);
+        example(obj,(StringMatchMode)null,(FieldFunction)null);
         return this;
     }
 

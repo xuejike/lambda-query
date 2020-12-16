@@ -1,6 +1,6 @@
 package com.github.xuejike.query.jpa.lambda.core.impl;
 
-import com.github.xuejike.query.jpa.lambda.core.IPage;
+import com.github.xuejike.query.core.criteria.IPage;
 
 import java.util.List;
 

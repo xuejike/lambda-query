@@ -1,10 +1,9 @@
-package com.github.xuejike.query.jpa.lambda.tool;
+package com.github.xuejike.query.core.tool.lambda;
 
-import com.github.xuejike.query.jpa.lambda.core.FieldFunction;
-import com.github.xuejike.query.jpa.lambda.exception.JpaLambdaException;
+
+import com.github.xuejike.query.core.exception.LambdaQueryException;
 
 import java.lang.ref.WeakReference;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -17,7 +16,7 @@ public class LambdaTool {
         } else if (name.startsWith("get") || name.startsWith("set")) {
             name = name.substring(3);
         } else {
-            throw new JpaLambdaException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
+            throw new LambdaQueryException("Error parsing property name '" + name + "'.  Didn't start with 'is', 'get' or 'set'.");
         }
 
         if (name.length() == 1 || (name.length() > 1 && !Character.isUpperCase(name.charAt(1)))) {

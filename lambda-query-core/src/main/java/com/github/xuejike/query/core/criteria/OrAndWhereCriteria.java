@@ -1,6 +1,6 @@
-package com.github.xuejike.query.jpa.lambda.core;
+package com.github.xuejike.query.core.criteria;
 
-import com.github.xuejike.query.jpa.lambda.JpaQuery;
+import com.github.xuejike.query.core.criteria.WhereCriteria;
 
 import java.util.function.Function;
 

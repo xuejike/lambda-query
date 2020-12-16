@@ -1,5 +1,6 @@
 package com.github.xuejike.query.jpa.lambda.core;
 
+import com.github.xuejike.query.core.criteria.IPage;
 import com.github.xuejike.query.jpa.lambda.core.impl.Page;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;

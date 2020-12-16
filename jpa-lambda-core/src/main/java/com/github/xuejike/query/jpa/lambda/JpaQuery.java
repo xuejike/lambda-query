@@ -1,8 +1,12 @@
 package com.github.xuejike.query.jpa.lambda;
 
+import com.github.xuejike.query.core.criteria.*;
+import com.github.xuejike.query.core.enums.StringMatchMode;
 import com.github.xuejike.query.jpa.lambda.core.*;
+import com.github.xuejike.query.jpa.lambda.tool.MatchModeTool;
 import org.hibernate.Session;
 import org.hibernate.criterion.*;
+
 
 import java.util.Collection;
 import java.util.List;
@@ -229,15 +233,17 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
 
     @Override
     public <V> JpaQuery<T> like(String field, String val) {
-        return like(field, val,MatchMode.ANYWHERE);
+        return like(field, val,StringMatchMode.ANYWHERE);
     }
 
     @Override
-    public <V> JpaQuery<T> like(String field, String val, MatchMode matchMode) {
+    public <V> JpaQuery<T> like(String field, String val, StringMatchMode stringMatchMode) {
         Optional.ofNullable(val)
-                .ifPresent(v-> whereCriterionList.add(Restrictions.like(field, v, matchMode)));
+                .ifPresent(v-> whereCriterionList.add(Restrictions.
+                        like(field, v, MatchModeTool.getMatchMode(stringMatchMode))));
         return this;
     }
+
 
     @Override
     public JpaQuery<T> isNull(String field) {
@@ -339,9 +345,10 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
         return this;
     }
     @Override
-    public JpaQuery<T> example(T obj, MatchMode likeModel, String ... excludeProperties){
+    public JpaQuery<T> example(T obj, StringMatchMode likeModel, String ... excludeProperties){
         Example example = Example.create(obj);
-        Optional.ofNullable(likeModel).ifPresent(example::enableLike);
+        Optional.ofNullable(MatchModeTool.getMatchMode(likeModel))
+                .ifPresent(example::enableLike);
         Optional.ofNullable(excludeProperties)
                 .filter(e->e.length>0)
                 .ifPresent(e->{
@@ -355,13 +362,13 @@ public class JpaQuery<T> extends AbstractJpaQuery<T> implements
     }
 
     @Override
-    public JpaQuery<T> example(T obj, MatchMode likeModel) {
-        return example(obj,likeModel,null);
+    public JpaQuery<T> example(T obj, StringMatchMode likeModel) {
+        return example(obj,likeModel,(String)null);
     }
 
     @Override
     public JpaQuery<T> example(T obj) {
-        return example(obj,null,null);
+        return example(obj,(StringMatchMode)null,(String) null);
     }
 
     @Override
