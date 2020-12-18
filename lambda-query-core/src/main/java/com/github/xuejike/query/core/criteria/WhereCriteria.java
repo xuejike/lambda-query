@@ -12,22 +12,49 @@ import java.util.Collection;
  */
 public interface WhereCriteria<P,F> {
 
-    <V>P ne(F field,V val);
-    <V>P eq(F field,V val);
-    <V>P gt(F field,V val);
-    <V>P gte(F field,V val);
-    <V>P lt(F field,V val);
-    <V>P lte(F field,V val);
-    <V>P like(F field,String val);
-    <V>P like(F field, String val, StringMatchMode stringMatchMode);
-    <V>P in(F field,V... val);
-    <V>P notIn(F field,V... val);
-    <V>P in(F field, Collection<V> val);
-    <V>P notIn(F field, Collection<V> val);
+    P ne(F field,Object val);
+    P ne(boolean condition,F field,Object val);
+
+    P eq(F field,Object val);
+    P eq(boolean condition,F field,Object val);
+
+    P gt(F field,Object val);
+    P gt(boolean condition,F field,Object val);
+
+    P gte(F field,Object val);
+    P gte(boolean condition,F field,Object val);
+
+    P lt(F field,Object val);
+    P lt(boolean condition,F field,Object val);
+
+    P lte(F field,Object val);
+    P lte(boolean condition,F field,Object val);
+
+    P like(F field,String val);
+    P like(boolean condition,F field,String val);
+
+    P like(F field, String val, StringMatchMode stringMatchMode);
+    P like(boolean condition,F field, String val, StringMatchMode stringMatchMode);
+
+    P in(F field,Object... val);
+    P in(boolean condition,F field,Object... val);
+
+    P notIn(F field,Object... val);
+    P notIn(boolean condition,F field,Object... val);
+
+    P in(F field, Collection<Object> val);
+    P in(boolean condition,F field, Collection<Object> val);
+
+    P notIn(F field, Collection<Object> val);
+    P notIn(boolean condition,F field, Collection<Object> val);
+
     P isNull(F field);
+    P isNull(boolean condition,F field);
+
     P notNull(F field);
-    <V>P between(F field,V start,V end);
+    P notNull(boolean condition,F field);
 
-
+    P between(F field,Object start,Object end);
+    P between(boolean condition,F field,Object start,Object end);
 
 }

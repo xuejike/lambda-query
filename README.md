@@ -1,71 +1,44 @@
-# jpa-lambda-query
+# lambda-query
 [![](https://jitpack.io/v/xuejike/jpa-lambda-query.svg)](https://jitpack.io/#xuejike/jpa-lambda-query)
 
 
-#### 介绍
-基于spring-jpa的Lambda查询方式，能够实现通过Lambda进行条件查询，关联属性加载，关联属性的子查询
+## 介绍
+采用Lambda的通用查询器,支持多种数据源查询
+* [ ] JPA(开发中)
+* [ ] MybatisPlus(开发中)
+* [ ] SpringBoot MongoTemplate(开发中)
+* [ ] HttpQuery(生成Http查询JSON)(开发中)
+* [ ] HttpServer(Http查询接入器)(开发中)
+* [ ] SpringBoot ES (开发中)
 
-#### 安装教程
+## 功能支持
+### 1. 基础查询条件
 
-1. 使用Spring-starter进行安装
-```groovy
-repositories {
+* 相等,eq
+* 不等,ne
+* 空值,isNull
+* 大于,gt
+* 大于等于,gte  
+* 小于,lt
+* 小于等于,lte
+* 包含,in
+* 不包含,notIn
+* 之间 ,between
 
-    maven { url 'https://jitpack.io' }
+### 2. 结果查询
 
-}
-
-
-com.github.xuejike.jpa-lambda-query:jpa-lambda-starter:0.1.2
-
-
-```
-2. 手动安装
-2.1. 引入依赖
-
-```groovy
-com.github.xuejike.jpa-lambda-query:jpa-lambda-core:0.1.2
-```
-2.2. 初始化
-```java
-        JpaQuerys.setEntityManager(entityManager);
-
-```
+* 通过ID查询
+* 查询列表
+* 分页查询
 
 
-#### 使用说明
+### 3.持久化操作
 
-1. 简单的查询语句
-```java
-        //正常查询
-        JpaLambdaQuery<User> userQuery = JpaQuerys.lambda(User.class);
-        List<User> list = userQuery.eq(User::getUsername, "111")
-                .gt(User::getCreateTime, LocalDateTime.now())
-                .list();
-```
-2. 嵌套的Or And查询语句
-```java
- List<User> list1 = JpaQuerys.lambda(User.class)
-                .eq(User::getUsername, "123")
-                .orEq(User::getUsername, "456")
-                .or(or->or.eq(User::getUsername,"lll").eq(User::getPwd,"456"))
-                .list();
-```
-3. 分页查询
-```java
-     Page<User> userPage = JpaQuerys
-                .lambda(User.class, entityManager)
-                .pageList(new Page(1, 10));
-```
+* 新增
+* 删除
+* 更新
+* 条件更新
 
-4. 加载关联数据
-```java
-        List<User> list1 = JpaQuerys.lambda(User.class)
-                .eq(User::getUsername, "123")
-                .loadJoin(User::getDept).list();
-```
-5. 使用关联属性进行关联查询
-```java
-        List<User> list2 = JpaQuerys.lambda(User.class)
-                .subQuery(User::getDept, lambda -> lambda.eq(Dept::getId, 1)).list();
-```
+## 扩展其他查询
+
+
