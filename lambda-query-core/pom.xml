@@ -11,9 +11,6 @@
     <name>lambda-query-core</name>
     <description>Demo project for Spring Boot</description>
     <version>2-SNAPSHOT</version>
-    <properties>
-        <java.version>8</java.version>
-    </properties>
 
     <dependencies>
 

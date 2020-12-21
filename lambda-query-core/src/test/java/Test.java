@@ -26,7 +26,7 @@ public class Test {
                 .buildQueryInfo();
         System.out.println(JSON.toJSONString(queryInfo));
         System.out.println("666");
-
+        cascadeField().subList(TestBean::getSubList).sub(TestBean.SubNameCls::getSub);
 
 
     }
