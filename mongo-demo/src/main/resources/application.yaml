@@ -1,0 +1,13 @@
+data:
+  mongodb:
+    #      mongodb://userName:password%40@localhost:27017/db?authSource=admin&authMechanism=SCRAM-SHA-1:
+    uri: mongodb://root:123456@192.168.0.213:27017/demo?authMechanism=SCRAM-SHA-1&authSource=admin
+    auto-index-creation: true
+logging:
+  level:
+    com.ascendant: debug
+    org.springframework.data.mongodb.core: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(-%5p)  %clr(${PID:- }){magenta} --- %clr([%15.15t]){faint} %highlight(%-80.80logger{300}){cyan} %clr(:) %m %n%wEx"
+
+

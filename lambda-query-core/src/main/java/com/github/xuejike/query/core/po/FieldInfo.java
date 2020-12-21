@@ -1,20 +1,30 @@
 package com.github.xuejike.query.core.po;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.github.xuejike.query.core.enums.FieldType;
 import com.github.xuejike.query.core.tool.lambda.FieldFunction;
+import com.github.xuejike.query.core.tool.lambda.LambdaTool;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author xuejike
  * @date 2020/12/18
  */
 @Data
-public class FieldInfo {
+public class FieldInfo implements Serializable {
     private String field;
+    @JSONField(serialize = false)
     private FieldFunction<?,?> fieldFunction;
     private FieldType type = FieldType.OBJECT;
+    private List<FieldInfo> subList = new LinkedList<>();
 
 
+    public FieldInfo() {
+    }
 
     public FieldInfo(String field) {
         this.field = field;
@@ -22,6 +32,7 @@ public class FieldInfo {
 
     public FieldInfo(FieldFunction<?, ?> fieldFunction) {
         this.fieldFunction = fieldFunction;
+        buildInfo(fieldFunction);
     }
 
     public FieldInfo(String field, FieldType type) {
@@ -31,7 +42,14 @@ public class FieldInfo {
 
     public FieldInfo(FieldFunction<?, ?> fieldFunction, FieldType type) {
         this.fieldFunction = fieldFunction;
-        this.type = type;
+        buildInfo(fieldFunction);
+
+    }
+
+    private void buildInfo(FieldFunction<?, ?> fieldFunction) {
+        FieldInfo info = LambdaTool.getFieldInfo(fieldFunction);
+        this.field = info.field;
+        this.type = info.type;
     }
 
 }

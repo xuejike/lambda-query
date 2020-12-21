@@ -11,6 +11,7 @@ public class TestBean {
     private String name;
     private SubNameCls sub;
     private List<SubNameCls> subList;
+    private SubNameCls[] subArray;
 
     @Data
     public static class SubNameCls{

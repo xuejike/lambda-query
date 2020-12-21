@@ -14,39 +14,51 @@ import java.util.List;
  */
 public class CascadeField<P,T> implements FieldFunction<T,String>{
 
-    private final List<FieldInfo> parentList = new LinkedList<>();
+    private FieldInfo fieldInfo;
 
     public CascadeField() {
 
     }
     public CascadeField(CascadeField<?,?> cascadeField){
-        parentList.addAll(cascadeField.parentList);
-    }
-    public CascadeField(CascadeField<?,?> cascadeField,FieldInfo... fieldInfo){
-        parentList.addAll(cascadeField.parentList);
-        CollUtil.addAll(parentList,fieldInfo);
+        fieldInfo = cascadeField.fieldInfo;
     }
 
     public<S> CascadeField<S,T> sub(FieldFunction<P,S> field){
-        return new CascadeField<S,T>(this,new FieldInfo(field));
+        addSetFieldInfo(new FieldInfo(field));
+        return new CascadeField<S,T>(this);
     }
     public<S> CascadeField<S,T> subList(FieldFunction<P,List<S>> field){
-        return new CascadeField<S,T>(this,new FieldInfo(field, FieldType.LIST));
+        addSetFieldInfo(new FieldInfo(field,FieldType.LIST));
+        return new CascadeField<S,T>(this);
     }
     public<S> CascadeField<S,T> subClass(FieldFunction<P,?> field, Class<S> cls){
-        return new CascadeField<S,T>(this,new FieldInfo(field));
+        addSetFieldInfo(new FieldInfo(field));
+        return new CascadeField<S,T>(this);
     }
     public  CascadeField<String,T> subFieldName(String sub){
-        return new CascadeField<String,T>(this,new FieldInfo(sub));
+        addSetFieldInfo(new FieldInfo(sub));
+        return new CascadeField<String,T>(this);
     }
     public  CascadeField<String,T> subFieldName(String sub, FieldType fieldType){
-        return new CascadeField<String,T>(this,new FieldInfo(sub,fieldType));
+        addSetFieldInfo(new FieldInfo(sub,fieldType));
+        return new CascadeField<String,T>(this);
+    }
+    private CascadeField<P,T> addSetFieldInfo(FieldInfo info){
+
+        if (this.fieldInfo == null){
+            this.fieldInfo = info;
+        }else{
+            this.fieldInfo.getSubList().add(info);
+        }
+        return this;
     }
     @Override
     public String apply(T entity) {
-
+        //
         return null;
     }
 
-
+    public FieldInfo getFieldInfo() {
+        return fieldInfo;
+    }
 }

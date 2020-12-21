@@ -61,8 +61,8 @@ public interface DaoCriteria<T> {
      * 根据条件查询并进行删除
      * @return
      */
-    default long removeFindAll(){
-        return getDao().removeFindAll();
+    default long removeQueryAll(){
+        return getDao().removeQueryAll();
     }
 
     /**

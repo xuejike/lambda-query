@@ -1,27 +1,17 @@
 package com.github.xuejike.query.core.criteria;
 
 public interface SelectCriteria<R,F> {
-    R select(F field,F alias);
-    default R select(F field){
-        return select(field,null);
-    }
-    R distinct(F field,F alias);
-    default R distinct(F field){
-        return distinct(field,null);
-    }
+    /**
+     * 选择需要提取的字段
+     * @param fields
+     * @return
+     */
+    R select(F ... fields);
 
-    R max(F field,F alias);
-    default R max(F field){return max(field,null);}
-
-    R min(F field,F alias);
-    default R min(F field){return min(field,null);}
-
-    R avg(F field,F alias);
-    default R avg(F field){return avg(field,null);}
-
-    R sum(F field,F alias);
-    default R sum(F field){return sum(field,null);}
-
-    R countDistinct(F field,F alias);
-    default R countDistinct(F field){return countDistinct(field,null);}
+    /**
+     * 选择排除的字段
+     * @param fields
+     * @return
+     */
+    R exclude(F ... fields);
 }

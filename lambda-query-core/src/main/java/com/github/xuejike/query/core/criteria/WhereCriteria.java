@@ -12,7 +12,21 @@ import java.util.Collection;
  */
 public interface WhereCriteria<P,F> {
 
+    /**
+     * 不等于
+     * @param field
+     * @param val
+     * @return
+     */
     P ne(F field,Object val);
+
+    /**
+     * 不等于
+     * @param condition  是否执行的判断
+     * @param field
+     * @param val
+     * @return
+     */
     P ne(boolean condition,F field,Object val);
 
     P eq(F field,Object val);

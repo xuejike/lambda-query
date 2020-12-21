@@ -5,24 +5,27 @@ import cn.hutool.log.Log;
 import com.github.xuejike.query.core.criteria.*;
 import com.github.xuejike.query.core.enums.StringMatchMode;
 import com.github.xuejike.query.core.enums.WhereOperation;
-import com.github.xuejike.query.core.po.BetweenObj;
+import com.github.xuejike.query.core.exception.LambdaQueryException;
+import com.github.xuejike.query.core.po.*;
 
-import com.github.xuejike.query.core.po.LikeValObj;
+import com.github.xuejike.query.core.tool.lambda.CascadeField;
+import com.github.xuejike.query.core.tool.lambda.FieldFunction;
+import com.github.xuejike.query.core.tool.lambda.LambdaTool;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @author xuejike
  * @date 2020/12/16
  */
 
-public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  WhereCriteria<C,F>{
-    protected Map<F, Map<WhereOperation,Object>> whereMap = new ConcurrentHashMap<>();
+public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  WhereCriteria<C,F>,SelectCriteria<C,F>{
+    protected Map<Object, Map<WhereOperation,Object>> whereMap = new ConcurrentHashMap<>();
     protected List<BaseWhereQuery<T,F,C>> orList = new LinkedList<>();
+    protected List<FieldInfo> selectList = new LinkedList<>();
+    protected List<FieldInfo> excludeList = new LinkedList<>();
     protected C returnObj = (C)this;
 
     public BaseWhereQuery() {
@@ -228,13 +231,20 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
         }
     }
     protected void putWhere(WhereOperation whereOperation,F field,Object val){
-        Map<WhereOperation, Object> fieldMap = getFieldMap(field);
+        Map<WhereOperation, Object> fieldMap = null;
+        if (field instanceof FieldFunction && !(field instanceof CascadeField)){
+            FieldInfo fieldInfo = LambdaTool.getFieldInfo(((FieldFunction<?, ?>) field));
+            fieldMap = getFieldMap(fieldInfo);
+        }else{
+            fieldMap = getFieldMap(field);
+        }
+
         if (fieldMap.containsKey(whereOperation)){
             Log.get().warn("请勿重复添加相同条件字段,条件将会被覆盖,{}-{}",field,whereOperation);
         }
         fieldMap.put(whereOperation,val);
     }
-    protected Map<WhereOperation,Object> getFieldMap(F field){
+    protected Map<WhereOperation,Object> getFieldMap(Object field){
         Map<WhereOperation, Object> map = whereMap.getOrDefault(field, new ConcurrentHashMap<>());
         if (!whereMap.containsKey(field)){
             whereMap.put(field,map);
@@ -242,11 +252,74 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
         return map;
     }
 
-    public Map<F, Map<WhereOperation, Object>> getWhereMap() {
+    public Map<Object, Map<WhereOperation, Object>> getWhereMap() {
         return whereMap;
     }
 
     public List<BaseWhereQuery<T, F, C>> getOrList() {
         return orList;
+    }
+
+
+    public QueryInfo buildQueryInfo(){
+        List<QueryItem> andList = whereMap.entrySet().stream().map(it -> {
+            Object key = it.getKey();
+            QueryItem queryItem = new QueryItem();
+            FieldInfo fieldInfo = null;
+            fieldInfo = parseFieldInfo(key);
+            queryItem.setField(fieldInfo);
+            queryItem.setVal(it.getValue());
+            return queryItem;
+
+
+        }).collect(Collectors.toList());
+
+
+
+        List<QueryInfo> collect = orList.stream().map(BaseWhereQuery::buildQueryInfo).collect(Collectors.toList());
+
+        QueryInfo queryInfo = new QueryInfo();
+        queryInfo.setAnd(andList);
+        queryInfo.setOr(collect);
+        return queryInfo;
+    }
+
+
+    @Override
+    public C select(F... fields) {
+        List<FieldInfo> list = Arrays.stream(fields).map(this::parseFieldInfo).collect(Collectors.toList());
+        this.selectList.addAll(list);
+        return returnObj;
+    }
+
+    @Override
+    public C exclude(F... fields) {
+        List<FieldInfo> list = Arrays.stream(fields).map(this::parseFieldInfo).collect(Collectors.toList());
+        this.excludeList.addAll(list);
+        return returnObj;
+    }
+
+    public List<FieldInfo> getSelectList() {
+        return selectList;
+    }
+
+    public List<FieldInfo> getExcludeList() {
+        return excludeList;
+    }
+
+    private FieldInfo parseFieldInfo(Object key) {
+        FieldInfo fieldInfo;
+        if (key instanceof String) {
+            fieldInfo = new FieldInfo((String) key);
+        } else if (key instanceof CascadeField) {
+            fieldInfo = ((CascadeField<?, ?>) key).getFieldInfo();
+        } else if (key instanceof FieldFunction) {
+            fieldInfo = LambdaTool.getFieldInfo(((FieldFunction) key));
+        } else if (key instanceof FieldInfo) {
+            fieldInfo =(FieldInfo) key;
+        } else {
+            throw new LambdaQueryException("字段类型不正确");
+        }
+        return fieldInfo;
     }
 }

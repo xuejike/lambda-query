@@ -5,7 +5,7 @@ import java.util.List;
 public interface IPage<T> {
 
 
-    abstract List<T> getData();
+    List<T> getData();
 
     int getPageNo();
 
@@ -14,4 +14,8 @@ public interface IPage<T> {
     long getTotal();
 
     boolean isHaveTotal();
+
+    void setTotal(long total);
+
+    void setData(List<T> data);
 }
