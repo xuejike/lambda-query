@@ -4,7 +4,7 @@
 
 ## 介绍
 采用Lambda的通用查询器,支持多种数据源查询
-* [ ] JPA(开发中)
+* [ ] JPA(开发中)(1.0版本支持)
 * [ ] MybatisPlus(开发中)
 * [ ] SpringBoot MongoTemplate(开发中)
 * [ ] HttpQuery(生成Http查询JSON)(开发中)
