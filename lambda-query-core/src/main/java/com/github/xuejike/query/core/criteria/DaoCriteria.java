@@ -17,7 +17,9 @@ public interface DaoCriteria<T> {
     default List<T> list(){
         return getDao().list();
     }
-
+    default Long count(){
+        return getDao().count();
+    }
     /**
      * 分页查询
      * @param page

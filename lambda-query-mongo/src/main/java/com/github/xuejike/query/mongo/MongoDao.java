@@ -74,6 +74,11 @@ public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
     }
 
     @Override
+    public Long count() {
+        return mongoTemplate.count(buildQuery(),entityCls);
+    }
+
+    @Override
     public IPage<T> page(IPage<T> page) {
         Query query = buildQuery();
          if (page.isHaveTotal()){
