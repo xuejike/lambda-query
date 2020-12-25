@@ -6,11 +6,13 @@
 采用Lambda的通用查询器,支持多种数据源查询
 * [ ] JPA(开发中)(1.0版本支持)
 * [ ] MybatisPlus(开发中)
-* [ ] SpringBoot MongoTemplate(开发中)
+* [x] SpringBoot MongoTemplate(开发完成)
 * [ ] HttpQuery(生成Http查询JSON)(开发中)
 * [ ] HttpServer(Http查询接入器)(开发中)
 * [ ] SpringBoot ES (开发中)
-
+### todo
+* [x] 基础条件查询
+* [ ] 聚合查询
 ## 功能支持
 ### 1. 基础查询条件
 
@@ -30,6 +32,8 @@
 * 通过ID查询
 * 查询列表
 * 分页查询
+* count 查询
+
 
 
 ### 3.持久化操作
