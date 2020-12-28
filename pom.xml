@@ -8,12 +8,35 @@
     <artifactId>lambda-query</artifactId>
     <version>1.0</version>
     <name>lambda-query</name>
-    <description>Demo project for Spring Boot</description>
+    <url>https://gitee.com/xuejike/lambda-query.git</url>
+
+    <description>query all in lambda</description>
     <modules>
         <module>lambda-query-core</module>
         <module>lambda-query-mongo</module>
         <module>mongo-demo</module>
     </modules>
+    <licenses>
+        <license>
+            <name>GNU General Public License v2.0</name>
+            <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <tag>master</tag>
+        <url>https://gitee.com/xuejike/lambda-query.git</url>
+        <connection>scm:git:https://gitee.com/xuejike/lambda-query.git</connection>
+        <developerConnection>scm:git:https://gitee.com/xuejike/lambda-query.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>xuejike</name>
+            <email>245674286@qq.com</email>
+            <organization>xuejike</organization>
+        </developer>
+    </developers>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -35,6 +58,7 @@
     </distributionManagement>
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -106,7 +130,20 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
