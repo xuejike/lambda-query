@@ -1,5 +1,5 @@
 # lambda-query 1.0 版本
-[![](https://jitpack.io/v/xuejike/jpa-lambda-query.svg)](https://jitpack.io/#xuejike/jpa-lambda-query)
+[![](https://travis-ci.org/xuejike/lambda-query.svg?branch=master)]
 
 
 ## 介绍
