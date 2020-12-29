@@ -28,5 +28,16 @@
             <version>3.4.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.4.1</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-extra</artifactId>
+            <version>5.5.2</version>
+        </dependency>
     </dependencies>
 </project>

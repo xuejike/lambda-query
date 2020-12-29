@@ -5,6 +5,7 @@ import com.github.xuejike.query.core.annotation.DaoSelect;
 import com.github.xuejike.query.core.config.DaoFactory;
 import com.github.xuejike.query.core.config.JkQueryConfig;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
+import com.github.xuejike.query.core.exception.LambdaQueryException;
 
 /**
  * @author xuejike
@@ -22,6 +23,6 @@ public class JkQuerys {
             }
         }
 
-        return null;
+        throw new LambdaQueryException("not find dao ");
     }
 }

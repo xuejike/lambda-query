@@ -1,9 +1,11 @@
 package com.github.xuejike.query.mybatisplus;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
-import com.github.xuejike.query.core.criteria.IPage;
+import com.github.xuejike.query.core.criteria.IJPage;
 import com.github.xuejike.query.core.po.QueryInfo;
 
 import java.io.Serializable;
@@ -22,9 +24,10 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
         this.baseMapper = baseMapper;
 
     }
-    protected void buildQuery(){
+    protected QueryWrapper<T> buildQuery(){
         QueryInfo queryInfo = baseWhereQuery.buildQueryInfo();
-
+        QueryWrapper<T> build = MyBatisPlusBuilder.build(queryInfo);
+        return build;
     }
     @Override
     public DaoCriteria<T> getDao() {
@@ -33,52 +36,60 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
 
     @Override
     public List<T> list() {
-
-        return null ;
+        QueryWrapper<T> query = buildQuery();
+        return baseMapper.selectList(query) ;
     }
 
     @Override
     public Long count() {
-        return null;
+        QueryWrapper<T> query = buildQuery();
+        return Long.valueOf(baseMapper.selectCount(query));
     }
 
     @Override
-    public IPage<T> page(IPage<T> page) {
-        return null;
+    public IJPage<T> page(IJPage<T> page) {
+        QueryWrapper<T> query = buildQuery();
+        Page<T> tPage = baseMapper.selectPage(new Page<>(page.getPageNo(), page.getPageSize(), page.isHaveTotal()), query);
+        page.setData(tPage.getRecords());
+        page.setTotal(tPage.getTotal());
+        return page;
     }
 
     @Override
     public T findById(Serializable id) {
-        return null;
+        return baseMapper.selectById(id);
     }
 
     @Override
-    public T updateById(T entity) {
-        return null;
+    public boolean updateById(T entity) {
+        int i = baseMapper.updateById(entity);
+        if (i > 0){
+            return true;
+        }
+        return false;
     }
 
     @Override
     public Long updateFindAll() {
+//        baseMapper.update()
         return null;
     }
 
     @Override
     public boolean removeById(Serializable id) {
+        int i = baseMapper.deleteById(id);
+        if (i > 0){
+            return true;
+        }
         return false;
     }
 
     @Override
     public long removeQueryAll() {
-        return 0;
+        QueryWrapper<T> query = buildQuery();
+        int delete = baseMapper.delete(query);
+        return delete;
     }
 
-    @Override
-    public long executeUpdate(Object query, Object... param) {
-        return 0;
-    }
 
-    @Override
-    public List<?> execute(Object query, Object... param) {
-        return null;
-    }
 }

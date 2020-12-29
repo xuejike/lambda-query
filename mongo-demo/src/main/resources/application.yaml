@@ -3,10 +3,17 @@ spring:
     mongodb:
       uri: mongodb://root:123456@192.168.0.213:27017/demo?authMechanism=SCRAM-SHA-1&authSource=admin
       auto-index-creation: true
+  datasource:
+    url: jdbc:mysql://192.168.0.213:3306/lambda-demo?useUnicode=true&useSSL=false&characterEncoding=utf8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: v5_dev
+    password: 1qaz!QAZ
+
 logging:
   level:
     com.ascendant: debug
     org.springframework.data.mongodb.core: DEBUG
+    com.github.xuejike.query.mongo.demo.mybatis.mapper: debug
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(-%5p)  %clr(${PID:- }){magenta} --- %clr([%15.15t]){faint} %highlight(%-80.80logger{300}){cyan} %clr(:) %m %n%wEx"
 

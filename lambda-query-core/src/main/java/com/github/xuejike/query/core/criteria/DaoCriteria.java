@@ -25,7 +25,7 @@ public interface DaoCriteria<T> {
      * @param page
      * @return
      */
-    default IPage<T> page(IPage<T> page){
+    default IJPage<T> page(IJPage<T> page){
         return getDao().page(page);
     }
 
@@ -43,7 +43,7 @@ public interface DaoCriteria<T> {
      * @param entity
      * @return
      */
-    default T updateById(T entity){
+    default boolean updateById(T entity){
         return getDao().updateById(entity);
     }
     default Long updateFindAll(){
@@ -67,23 +67,4 @@ public interface DaoCriteria<T> {
         return getDao().removeQueryAll();
     }
 
-    /**
-     * 执行更新
-     * @param query
-     * @param param
-     * @return
-     */
-    default long executeUpdate(Object query,Object ...param){
-        return getDao().executeUpdate(query, param);
-    }
-
-    /**
-     * 执行查询
-     * @param query
-     * @param param
-     * @return
-     */
-    default List<?> execute(Object query,Object ...param){
-        return getDao().execute(query, param);
-    }
 }

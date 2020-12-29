@@ -1,5 +1,8 @@
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.TypeUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.xuejike.query.core.JkLambdaQuery;
 
 import com.github.xuejike.query.core.JkQuerys;
@@ -10,6 +13,9 @@ import com.github.xuejike.query.mongo.MongoDao;
 import com.github.xuejike.query.mongo.MongoDaoFactory;
 import com.github.xuejike.query.mongo.demo.App;
 import com.github.xuejike.query.mongo.demo.data.TestDoc;
+import com.github.xuejike.query.mongo.demo.mybatis.entity.U1;
+import com.github.xuejike.query.mongo.demo.mybatis.mapper.U1Mapper;
+import com.github.xuejike.query.mybatisplus.MyBatisPlusDaoFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,8 +28,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xuejike
@@ -36,8 +44,12 @@ import java.util.List;
 public class TestMain {
     @Autowired
     MongoTemplate mongoTemplate;
+
+    @Autowired
+    U1Mapper u1Mapper;
     @BeforeEach
     public void before(){
+        new MyBatisPlusDaoFactory(SpringUtil.getBeansOfType(BaseMapper.class).values());
         new MongoDaoFactory(mongoTemplate);
     }
 
@@ -81,7 +93,28 @@ public class TestMain {
         System.out.println(JSON.toJSONString(list));
     }
     public CascadeField<TestDoc,TestDoc> of(){
-        CascadeField<TestDoc,TestDoc> field = new CascadeField<>();
-        return field;
+        return new CascadeField<>();
+    }
+
+    @Test
+    public void testAddU1(){
+
+        U1 u1 = new U1();
+        u1.setType("555");
+        u1.setName("name2");
+        u1Mapper.insert(u1);
+
+    }
+    @Test
+    public void queryU1(){
+        List<U1> list = JkQuerys.lambdaQuery(U1.class)
+                .eq(U1::getId, 1)
+                .or().eq(U1::getId,2)
+                .or(or->
+                        or.eq(U1::getId,1)
+                                .eq(U1::getName,"name1").eq(U1::getName,"666")
+                )
+                .list();
+        System.out.println(JSON.toJSONString(list));
     }
 }

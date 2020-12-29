@@ -1,11 +1,14 @@
 package com.github.xuejike.query.mybatisplus;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xuejike.query.core.enums.WhereOperation;
+import com.github.xuejike.query.core.exception.LambdaQueryException;
 import com.github.xuejike.query.core.po.*;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author xuejike
@@ -15,15 +18,24 @@ public class MyBatisPlusBuilder {
     public static<T> QueryWrapper<T> build(QueryInfo queryInfo ){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
 
-        for (QueryItem item : queryInfo.getAnd()) {
-            buildField(queryWrapper, item);
-        }
-        for (QueryInfo info : queryInfo.getOr()) {
-//            info.getAnd();
-        }
+        buildOrQuery(queryWrapper,queryInfo);
 
 
         return queryWrapper;
+    }
+    private static<T> void buildOrQuery(QueryWrapper<T> queryWrapper,QueryInfo info){
+        for (QueryItem item : info.getAnd()) {
+            buildField(queryWrapper,item);
+        }
+        if (CollUtil.isNotEmpty(info.getOr())){
+            for (QueryInfo queryInfo : info.getOr()) {
+                if (CollUtil.isNotEmpty(queryInfo.getOr()) || CollUtil.isNotEmpty(queryInfo.getAnd())){
+                    queryWrapper.or(or->{
+                        buildOrQuery(or,queryInfo);
+                    });
+                }
+            }
+        }
     }
 
     private static <T> void buildField(QueryWrapper<T> queryWrapper, QueryItem item) {
@@ -78,9 +90,9 @@ public class MyBatisPlusBuilder {
 
     public static String buildField(FieldInfo fieldInfo){
         StringBuilder builder = new StringBuilder(fieldInfo.getField());
-        for (FieldInfo info : fieldInfo.getSubList()) {
-            builder.append(".").append(info.getField());
-        }
+       if (fieldInfo.getSubList().size()>0){
+           throw new LambdaQueryException("mybatis 暂不支持 二级数据查询");
+       }
 
         return builder.toString();
     }

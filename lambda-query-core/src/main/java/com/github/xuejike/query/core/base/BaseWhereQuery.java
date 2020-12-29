@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
  * @date 2020/12/16
  */
 
-public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  WhereCriteria<C,F>,SelectCriteria<C,F>{
+public class BaseWhereQuery<T,F,C> implements  WhereCriteria<C,F>,SelectCriteria<C,F>{
     protected Map<Object, Map<WhereOperation,Object>> whereMap = new ConcurrentHashMap<>();
-    protected List<BaseWhereQuery<T,F,C>> orList = new LinkedList<>();
+    protected List<BaseWhereQuery<T,F,?>> orList = new LinkedList<>();
     protected List<FieldInfo> selectList = new LinkedList<>();
     protected List<FieldInfo> excludeList = new LinkedList<>();
     protected C returnObj = (C)this;
@@ -256,7 +256,7 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
         return whereMap;
     }
 
-    public List<BaseWhereQuery<T, F, C>> getOrList() {
+    public List<BaseWhereQuery<T, F, ?>> getOrList() {
         return orList;
     }
 

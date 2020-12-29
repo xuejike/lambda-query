@@ -2,7 +2,7 @@ package com.github.xuejike.query.core.criteria;
 
 import java.util.List;
 
-public interface IPage<T> {
+public interface IJPage<T> {
 
 
     List<T> getData();
