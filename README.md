@@ -1,7 +1,6 @@
 # lambda-query 1.0 版本
-[![](https://jitpack.io/v/xuejike/jpa-lambda-query.svg)](https://jitpack.io/#xuejike/jpa-lambda-query)
-
-
+[![](https://travis-ci.org/xuejike/lambda-query.svg?branch=master)](https://github.com/xuejike/lambda-query)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.xuejike/lambda-query/badge.svg)](https://mvnrepository.com/artifact/com.github.xuejike)
 ## 介绍
 LambdaQuery 将支持通过Lambda进行多种数据源的查询 实现java端的简单数据的统一查询
 ## 功能规划

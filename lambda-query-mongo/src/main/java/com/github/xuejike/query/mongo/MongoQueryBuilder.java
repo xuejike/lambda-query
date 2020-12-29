@@ -10,7 +10,10 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 /**
  * @author xuejike
@@ -27,10 +30,39 @@ public class MongoQueryBuilder {
             Criteria where = Criteria.where(buildField(item.getField()));
             updateCriteria(where,item.getVal());
             query.addCriteria(where);
+        }
+        List<QueryInfo> or = queryInfo.getOr();
 
+
+        Criteria[] criteriaList = or.stream().map(MongoQueryBuilder::buildItem).filter(Objects::nonNull).toArray(Criteria[]::new);
+        if (criteriaList.length > 0){
+            Criteria orCriteria = new Criteria();
+            orCriteria.orOperator(criteriaList);
+            query.addCriteria(orCriteria);
         }
 
         return query;
+    }
+    protected static Criteria buildItem(QueryInfo queryInfo){
+        if (queryInfo.getAnd().isEmpty() && queryInfo.getOr().isEmpty()){
+            return null;
+        }
+        Criteria criteria = new Criteria();
+        List<QueryItem> and = queryInfo.getAnd();
+        for (QueryItem item : and) {
+            Criteria where = Criteria.where(buildField(item.getField()));
+            updateCriteria(where,item.getVal());
+            criteria.andOperator(where);
+        }
+
+        List<QueryInfo> or = queryInfo.getOr();
+        for (QueryInfo info : or) {
+            Criteria buildItem = buildItem(info);
+            if (buildItem != null){
+                criteria.orOperator(buildItem);
+            }
+        }
+        return criteria;
     }
     public static String buildField(FieldInfo fieldInfo){
         StringBuilder builder = new StringBuilder(fieldInfo.getField());

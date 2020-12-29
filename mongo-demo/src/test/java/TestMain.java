@@ -1,16 +1,23 @@
 import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.github.xuejike.query.core.JkLambdaQuery;
+
+import com.github.xuejike.query.core.JkQuerys;
 import com.github.xuejike.query.core.tool.lambda.CascadeField;
 import com.github.xuejike.query.mongo.MongoDao;
-import com.github.xuejike.query.mongo.MongoQuerys;
+
+
+import com.github.xuejike.query.mongo.MongoDaoFactory;
 import com.github.xuejike.query.mongo.demo.App;
 import com.github.xuejike.query.mongo.demo.data.TestDoc;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,7 +36,10 @@ import java.util.List;
 public class TestMain {
     @Autowired
     MongoTemplate mongoTemplate;
-
+    @BeforeEach
+    public void before(){
+        new MongoDaoFactory(mongoTemplate);
+    }
 
     @Test
     public void save(){
@@ -54,10 +64,17 @@ public class TestMain {
 
 
 
-        JkLambdaQuery<TestDoc> lambda = MongoQuerys.lambda(mongoTemplate, TestDoc.class);
+        JkLambdaQuery<TestDoc> lambda = JkQuerys.lambdaQuery(TestDoc.class);
 
+//        Query query = new Query();
+//        query.addCriteria(new Criteria().orOperator(Criteria.where("name").is("999"))
+//
+//        );
+//        List<TestDoc> list = mongoTemplate.find(query, TestDoc.class);
         List<TestDoc> list = lambda.eq(of().subList(TestDoc::getToc)
                 .sub(TestDoc.Title::getTitle), "sub_title_0_2")
+                .or().eq(of().sub(TestDoc::getTitle),"666")
+                .or().eq(of().sub(TestDoc::getName),"6661")
                 .select(TestDoc::getTitle)
                 .list();
 

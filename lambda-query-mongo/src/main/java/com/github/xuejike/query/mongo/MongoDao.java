@@ -2,6 +2,7 @@ package com.github.xuejike.query.mongo;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.base.BaseNestedWhereQuery;
 import com.github.xuejike.query.core.base.BaseWhereQuery;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
@@ -26,14 +27,15 @@ import java.util.List;
  * @author xuejike
  * @date 2020/12/18
  */
-public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
+public class MongoDao<T>  extends BaseDao<T> {
     MongoTemplate mongoTemplate;
-    private BaseWhereQuery baseWhereQuery;
-    private Class<T> entityCls;
+
+
 
     public MongoDao(MongoTemplate mongoTemplate, Class<T> entityCls) {
+        super(entityCls);
         this.mongoTemplate = mongoTemplate;
-        this.entityCls = entityCls;
+
     }
 
 

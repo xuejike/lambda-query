@@ -5,7 +5,7 @@
     <parent>
         <artifactId>lambda-query</artifactId>
         <groupId>com.github.xuejike</groupId>
-        <version>2-SNAPSHOT</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,6 +42,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
