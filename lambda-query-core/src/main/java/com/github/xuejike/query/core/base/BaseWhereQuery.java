@@ -3,6 +3,7 @@ package com.github.xuejike.query.core.base;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.log.Log;
 import com.github.xuejike.query.core.criteria.*;
+import com.github.xuejike.query.core.enums.OrderType;
 import com.github.xuejike.query.core.enums.StringMatchMode;
 import com.github.xuejike.query.core.enums.WhereOperation;
 import com.github.xuejike.query.core.exception.LambdaQueryException;
@@ -26,6 +27,7 @@ public class BaseWhereQuery<T,F,C> implements  WhereCriteria<C,F>,SelectCriteria
     protected List<BaseWhereQuery<T,F,?>> orList = new LinkedList<>();
     protected List<FieldInfo> selectList = new LinkedList<>();
     protected List<FieldInfo> excludeList = new LinkedList<>();
+    protected Map<FieldInfo, OrderType> orderMap = new ConcurrentHashMap<>();
     protected C returnObj = (C)this;
 
     public BaseWhereQuery() {
@@ -220,7 +222,7 @@ public class BaseWhereQuery<T,F,C> implements  WhereCriteria<C,F>,SelectCriteria
 
 
     public boolean isEmpty(){
-        return CollUtil.isEmpty(whereMap) && CollUtil.isEmpty(orList);
+        return CollUtil.isEmpty(whereMap) && CollUtil.isEmpty(orList) && CollUtil.isEmpty(selectList) && CollUtil.isEmpty(excludeList) && CollUtil.isEmpty(orderMap);
     }
     public boolean isNotEmpty(){
         return !isEmpty();
@@ -284,6 +286,9 @@ public class BaseWhereQuery<T,F,C> implements  WhereCriteria<C,F>,SelectCriteria
         return queryInfo;
     }
 
+    public Map<FieldInfo, OrderType> getOrderMap() {
+        return orderMap;
+    }
 
     @Override
     public C select(F... fields) {

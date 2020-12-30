@@ -1,6 +1,6 @@
 package com.github.xuejike.query.core.criteria;
 
-public interface OrderCriteria<T,F> {
-    T orderAsc(F ...fields);
-    T orderDesc(F ...fields);
+public interface OrderCriteria<F,R> {
+    R orderAsc(F ...fields);
+    R orderDesc(F ...fields);
 }

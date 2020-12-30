@@ -46,6 +46,16 @@ public interface DaoCriteria<T> {
     default boolean updateById(T entity){
         return getDao().updateById(entity);
     }
+
+    /**
+     * 插入
+     * @param entity
+     * @return
+     */
+    default T insert(T entity){
+        return getDao().insert(entity);
+    }
+
     default Long updateFindAll(){
         return getDao().updateFindAll();
     }

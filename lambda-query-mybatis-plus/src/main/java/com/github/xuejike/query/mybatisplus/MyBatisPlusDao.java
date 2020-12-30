@@ -1,15 +1,20 @@
 package com.github.xuejike.query.mybatisplus;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
 import com.github.xuejike.query.core.criteria.IJPage;
+import com.github.xuejike.query.core.enums.OrderType;
+import com.github.xuejike.query.core.po.FieldInfo;
 import com.github.xuejike.query.core.po.QueryInfo;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xuejike
@@ -27,6 +32,24 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
     protected QueryWrapper<T> buildQuery(){
         QueryInfo queryInfo = baseWhereQuery.buildQueryInfo();
         QueryWrapper<T> build = MyBatisPlusBuilder.build(queryInfo);
+        if (CollUtil.isNotEmpty(baseWhereQuery.getSelectList())){
+            List<FieldInfo> selectList = baseWhereQuery.getSelectList();
+            build.select(selectList.stream().map(MyBatisPlusBuilder::buildField).toArray(String[]::new));
+        }
+        if (CollUtil.isNotEmpty(baseWhereQuery.getExcludeList())){
+            List<FieldInfo> excludeList = baseWhereQuery.getExcludeList();
+            // TODO: 2020/12/30 排除
+        }
+        if (CollUtil.isNotEmpty(baseWhereQuery.getOrderMap())){
+            Map<FieldInfo, OrderType> orderMap = baseWhereQuery.getOrderMap();
+            orderMap.entrySet().stream().forEach(it->{
+                if (it.getValue() == OrderType.desc){
+                    build.orderByDesc(MyBatisPlusBuilder.buildField(it.getKey()));
+                }else{
+                    build.orderByAsc(MyBatisPlusBuilder.buildField(it.getKey()));
+                }
+            });
+        }
         return build;
     }
     @Override
@@ -67,6 +90,12 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public T insert(T entity) {
+        int insert = baseMapper.insert(entity);
+        return entity;
     }
 
     @Override

@@ -83,11 +83,9 @@ public class TestMain {
 //
 //        );
 //        List<TestDoc> list = mongoTemplate.find(query, TestDoc.class);
-        List<TestDoc> list = lambda.eq(of().subList(TestDoc::getToc)
-                .sub(TestDoc.Title::getTitle), "sub_title_0_2")
-                .or().eq(of().sub(TestDoc::getTitle),"666")
-                .or().eq(of().sub(TestDoc::getName),"6661")
-                .select(TestDoc::getTitle)
+        List<TestDoc> list = lambda
+                .orderDesc(TestDoc::getNum)
+                .select(TestDoc::getNum)
                 .list();
 
         System.out.println(JSON.toJSONString(list));
@@ -111,8 +109,7 @@ public class TestMain {
                 .eq(U1::getId, 1)
                 .or().eq(U1::getId,2)
                 .or(or->
-                        or.eq(U1::getId,1)
-                                .eq(U1::getName,"name1").eq(U1::getName,"666")
+                        or.eq(U1::getId,1).eq(U1::getName,"name1").eq(U1::getName,"666")
                 )
                 .list();
         System.out.println(JSON.toJSONString(list));

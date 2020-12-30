@@ -5,9 +5,11 @@ import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.base.BaseWhereQuery;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
 import com.github.xuejike.query.core.criteria.IJPage;
+import com.github.xuejike.query.core.enums.OrderType;
 import com.github.xuejike.query.core.po.FieldInfo;
 import com.mongodb.client.result.DeleteResult;
 import org.bson.Document;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Field;
@@ -16,6 +18,9 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 /**
  * @author xuejike
@@ -48,6 +53,17 @@ public class MongoDao<T>  extends BaseDao<T> {
             for (FieldInfo info : list) {
                 fields.exclude(MongoQueryBuilder.buildField(info));
             }
+        }
+        if (CollUtil.isNotEmpty(baseWhereQuery.getOrderMap())){
+            Map<FieldInfo, OrderType> orderMap = baseWhereQuery.getOrderMap();
+            List<Sort.Order> orderList = orderMap.entrySet().stream().map(it -> {
+                if (it.getValue() == OrderType.desc) {
+                    return Sort.Order.desc(MongoQueryBuilder.buildField(it.getKey()));
+                } else {
+                    return Sort.Order.asc(MongoQueryBuilder.buildField(it.getKey()));
+                }
+            }).collect(Collectors.toList());
+            builder.with(Sort.by(orderList));
         }
         return builder;
 
@@ -98,6 +114,12 @@ public class MongoDao<T>  extends BaseDao<T> {
     public boolean updateById(T entity) {
         T save = mongoTemplate.save(entity);
         return true;
+    }
+
+    @Override
+    public T insert(T entity) {
+        T insert = mongoTemplate.insert(entity);
+        return insert;
     }
 
     @Override

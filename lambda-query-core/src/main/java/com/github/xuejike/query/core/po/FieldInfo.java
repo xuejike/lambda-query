@@ -52,4 +52,5 @@ public class FieldInfo implements Serializable {
         this.type = info.type;
     }
 
+
 }
