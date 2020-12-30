@@ -89,6 +89,7 @@ public class MyBatisPlusBuilder {
     }
 
     public static String buildField(FieldInfo fieldInfo){
+        // TODO: 2020/12/30 对注解自定义列处理
         StringBuilder builder = new StringBuilder(fieldInfo.getField());
        if (fieldInfo.getSubList().size()>0){
            throw new LambdaQueryException("mybatis 暂不支持 二级数据查询");

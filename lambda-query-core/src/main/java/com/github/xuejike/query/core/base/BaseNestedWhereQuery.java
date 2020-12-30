@@ -6,7 +6,7 @@ import java.util.function.Consumer;
  * @author xuejike
  * @date 2020/12/18
  */
-public class BaseNestedWhereQuery<T,F,C>  extends BaseSimpleWhereQuery<T,F,C>{
+public class BaseNestedWhereQuery<T,F,C extends BaseWhereQuery>  extends BaseSimpleWhereQuery<T,F,C>{
 
     public BaseNestedWhereQuery() {
 

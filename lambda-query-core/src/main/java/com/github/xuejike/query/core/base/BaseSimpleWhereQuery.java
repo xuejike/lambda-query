@@ -4,7 +4,7 @@ package com.github.xuejike.query.core.base;
  * @author xuejike
  * @date 2020/12/18
  */
-public class BaseSimpleWhereQuery<T,F,C>  extends BaseWhereQuery<T,F,C>{
+public class BaseSimpleWhereQuery<T,F,C extends BaseWhereQuery>  extends BaseWhereQuery<T,F,C>{
 
 
     public BaseSimpleWhereQuery() {
