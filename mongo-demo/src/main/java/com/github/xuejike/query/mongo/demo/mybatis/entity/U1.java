@@ -18,5 +18,6 @@ public class U1 {
     private Long id;
     private String name;
     private String type;
+    private Long u2Id;
 
 }

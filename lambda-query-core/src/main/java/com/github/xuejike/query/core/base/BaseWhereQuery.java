@@ -23,11 +23,13 @@ import java.util.stream.Collectors;
  */
 
 public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  WhereCriteria<C,F>,SelectCriteria<C,F>{
-    protected Map<Object, Map<WhereOperation,Object>> whereMap = new ConcurrentHashMap<>();
+    protected Map<FieldInfo, Map<WhereOperation,Object>> whereMap = new ConcurrentHashMap<>();
     protected List<BaseWhereQuery<T,F,?>> orList = new LinkedList<>();
     protected List<FieldInfo> selectList = new LinkedList<>();
     protected List<FieldInfo> excludeList = new LinkedList<>();
     protected Map<FieldInfo, OrderType> orderMap = new ConcurrentHashMap<>();
+    protected Map<FieldInfo,LoadRefInfo<?>> refClassMap = new ConcurrentHashMap<>();
+
     protected C returnObj = (C)this;
 
     public BaseWhereQuery() {
@@ -234,19 +236,25 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
     }
     protected void putWhere(WhereOperation whereOperation,F field,Object val){
         Map<WhereOperation, Object> fieldMap = null;
-        if (field instanceof FieldFunction && !(field instanceof CascadeField)){
-            FieldInfo fieldInfo = LambdaTool.getFieldInfo(((FieldFunction<?, ?>) field));
-            fieldMap = getFieldMap(fieldInfo);
-        }else{
-            fieldMap = getFieldMap(field);
-        }
+        fieldMap = getFieldMap(buildFieldInfo(field));
 
         if (fieldMap.containsKey(whereOperation)){
             Log.get().warn("请勿重复添加相同条件字段,条件将会被覆盖,{}-{}",field,whereOperation);
         }
         fieldMap.put(whereOperation,val);
     }
-    protected Map<WhereOperation,Object> getFieldMap(Object field){
+    protected FieldInfo buildFieldInfo(Object field){
+        if (field instanceof FieldFunction && !(field instanceof CascadeField)){
+            return LambdaTool.getFieldInfo(((FieldFunction<?, ?>) field));
+        }else if (field instanceof String){
+            return new FieldInfo(((String) field));
+        }else if (field instanceof CascadeField){
+            return ((CascadeField<?, ?>) field).getFieldInfo();
+        }else{
+            throw new LambdaQueryException("field type is error");
+        }
+    }
+    protected Map<WhereOperation,Object> getFieldMap(FieldInfo field){
         Map<WhereOperation, Object> map = whereMap.getOrDefault(field, new ConcurrentHashMap<>());
         if (!whereMap.containsKey(field)){
             whereMap.put(field,map);
@@ -254,7 +262,7 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
         return map;
     }
 
-    public Map<Object, Map<WhereOperation, Object>> getWhereMap() {
+    public Map<FieldInfo, Map<WhereOperation, Object>> getWhereMap() {
         return whereMap;
     }
 
@@ -326,5 +334,9 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
             throw new LambdaQueryException("字段类型不正确");
         }
         return fieldInfo;
+    }
+
+    public Map<FieldInfo, LoadRefInfo<?>> getRefClassMap() {
+        return refClassMap;
     }
 }

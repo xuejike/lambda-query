@@ -31,6 +31,7 @@ public class LambdaTool {
     }
 
     protected static Map<Class, WeakReference<FieldInfo>> cache = new ConcurrentHashMap<>();
+
     public static<T> FieldInfo getFieldInfo(FieldFunction<T,?> fieldFun){
         Class<? extends FieldFunction> cls = fieldFun.getClass();
         return Optional.ofNullable(cache.get(cls))

@@ -1,9 +1,9 @@
 package com.github.xuejike.query.core;
 
+import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.base.BaseNestedWhereQuery;
-import com.github.xuejike.query.core.criteria.DaoCriteria;
-import com.github.xuejike.query.core.criteria.InjectionBaseQuery;
-import com.github.xuejike.query.core.criteria.OrderCriteria;
+import com.github.xuejike.query.core.base.MapDao;
+import com.github.xuejike.query.core.criteria.*;
 import com.github.xuejike.query.core.enums.OrderType;
 import com.github.xuejike.query.core.po.FieldInfo;
 import com.github.xuejike.query.core.tool.lambda.FieldFunction;
@@ -15,12 +15,12 @@ import java.util.Arrays;
  * @author xuejike
  * @date 2020/12/18
  */
-public class JkLambdaQuery<T> extends BaseNestedWhereQuery<T, FieldFunction<T,?>, JkLambdaQuery<T>> implements DaoCriteria<T> , OrderCriteria<FieldFunction<T,?>, JkLambdaQuery<T>> {
-    private DaoCriteria<T> daoCriteria;
+public class JkLambdaQuery<T> extends BaseNestedWhereQuery<T, FieldFunction<T,?>, JkLambdaQuery<T>> implements DaoCriteria<T> , OrderCriteria<FieldFunction<T,?>, JkLambdaQuery<T>>, MapCriteria {
+    private BaseDao<T> daoCriteria;
 
-    public JkLambdaQuery(DaoCriteria<T> daoCriteria) {
+    public JkLambdaQuery(BaseDao<T> daoCriteria) {
         this.daoCriteria = daoCriteria;
-        if (daoCriteria instanceof InjectionBaseQuery){
+        if (daoCriteria != null){
             ((InjectionBaseQuery) daoCriteria).injectionBaseWhereQuery(this);
         }
     }
@@ -47,5 +47,10 @@ public class JkLambdaQuery<T> extends BaseNestedWhereQuery<T, FieldFunction<T,?>
         });
 
         return returnObj;
+    }
+
+    @Override
+    public <M> SelectDaoCriteria<M> map(Class<M> mapCls) {
+        return new MapDao<T,M>(daoCriteria,mapCls);
     }
 }

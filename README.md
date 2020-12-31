@@ -132,7 +132,7 @@ public class TestDoc {
 /**
  * == 查询
  */
-@Test
+@TestMain
 public void testEq(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).eq(TestDoc::getName, "name_1").list();
         Assertions.assertEquals(list.size(),1);
@@ -144,7 +144,7 @@ public void testEq(){
  * 大于号查询
  *
  */
-@Test
+@TestMain
 public void testGt(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gt(TestDoc::getNum,3 ).list();
         Assertions.assertEquals(list.size(),1);
@@ -155,7 +155,7 @@ public void testGt(){
 /**
  * 大于等于查询
  */
-@Test
+@TestMain
 public void testGte(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gte(TestDoc::getNum,4 ).list();
         Assertions.assertEquals(list.size(),1);
@@ -166,7 +166,7 @@ public void testGte(){
 /**
  * 小于号查询
  */
-@Test
+@TestMain
 public void testLt(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lt(TestDoc::getNum,1 ).list();
         Assertions.assertEquals(list.size(),1);
@@ -177,7 +177,7 @@ public void testLt(){
 /**
  * 小于等于查询
  */
-@Test
+@TestMain
 public void testLte(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lte(TestDoc::getNum,0 ).list();
         Assertions.assertEquals(list.size(),1);
@@ -188,7 +188,7 @@ public void testLte(){
 /**
  * In 查询
  */
-@Test
+@TestMain
 public void testIn(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
         .in(TestDoc::getTitle,"title_0" ).list();
@@ -200,7 +200,7 @@ public void testIn(){
 /**
  * NotIn 查询
  */
-@Test
+@TestMain
 public void testNotIn(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
         .notIn(TestDoc::getTitle,"title_0","title_1","title_2","title_3" ).list();
@@ -212,7 +212,7 @@ public void testNotIn(){
 /**
  * or 查询
  */
-@Test
+@TestMain
 public void testOr(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).or().eq(TestDoc::getNum, 0).or().eq(TestDoc::getNum, 1).list();
         Assertions.assertEquals(list.size(),2);
@@ -230,7 +230,7 @@ public void testOr(){
 /**
  * 排序查询
  */
-@Test
+@TestMain
 public void testOrder(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).in(TestDoc::getNum, 1, 2).orderAsc(TestDoc::getNum).list();
         Assertions.assertEquals(list.size(),2);
@@ -246,7 +246,7 @@ public void testOrder(){
 /**
  * 二级字段查询
  */
-@Test
+@TestMain
 public void testSubField(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).eq(of().subList(TestDoc::getToc).sub(TestDoc.Title::getTitle), "sub_title_0_0").list();
         Assertions.assertEquals(list.size(),1);

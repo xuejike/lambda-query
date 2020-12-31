@@ -17,5 +17,14 @@ public class JPage<T> implements IJPage<T> {
      private int pageNo;
      private boolean haveTotal;
 
-
+     public JPage() {
+     }
+     public JPage(int pageNo,int pageSize) {
+          this(pageNo,pageSize,true);
+     }
+     public JPage(int pageNo,int pageSize, boolean haveTotal) {
+          this.pageSize = pageSize;
+          this.pageNo = pageNo;
+          this.haveTotal = haveTotal;
+     }
 }

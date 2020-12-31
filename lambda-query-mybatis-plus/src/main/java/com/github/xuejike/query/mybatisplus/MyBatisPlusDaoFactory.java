@@ -3,6 +3,7 @@ package com.github.xuejike.query.mybatisplus;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.TypeUtil;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.config.DaoFactory;
 import com.github.xuejike.query.core.config.JkQueryConfig;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
@@ -33,7 +34,7 @@ public class MyBatisPlusDaoFactory extends DaoFactory {
 
 
     @Override
-    public <T> DaoCriteria<T> createDao(Class<T> entityCls) {
+    public <T> BaseDao<T> createDao(Class<T> entityCls) {
         if (!mapperMap.containsKey(entityCls)){
             for (BaseMapper mapper : mapperList) {
                 Type[] genericInterfaces = mapper.getClass().getGenericInterfaces();

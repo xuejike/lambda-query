@@ -24,4 +24,6 @@ public abstract class BaseDao<T> implements DaoCriteria<T> , InjectionBaseQuery 
     public void injectionBaseWhereQuery(BaseWhereQuery baseWhereQuery) {
         this.baseWhereQuery = baseWhereQuery;
     }
+
+
 }

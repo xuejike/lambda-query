@@ -1,5 +1,6 @@
 package com.github.xuejike.query.mongo;
 
+import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.config.DaoFactory;
 import com.github.xuejike.query.core.config.JkQueryConfig;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
@@ -27,7 +28,7 @@ public class MongoDaoFactory extends DaoFactory {
 
 
     @Override
-    public <T> DaoCriteria<T> createDao(Class<T> entityCls) {
+    public <T> BaseDao<T> createDao(Class<T> entityCls) {
         return new MongoDao<>(mongoTemplate,entityCls);
     }
 }

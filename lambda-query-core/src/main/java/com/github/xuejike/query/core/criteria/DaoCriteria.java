@@ -8,19 +8,21 @@ import java.util.Optional;
  * @author xuejike
  * @date 2020/12/18
  */
-public interface DaoCriteria<T> {
-    DaoCriteria<T> getDao();
+public interface DaoCriteria<T> extends SelectDaoCriteria<T>, GetDaoCriteria<T> {
 
     /**
      * 列表查询
      * @return
      */
+    @Override
     default List<T> list(){
         return getDao().list();
     }
+    @Override
     default T getFirst(){
         return getDao().getFirst();
     }
+    @Override
     default Optional<T> getFirstStream(){
         return Optional.ofNullable(getFirst());
     }
@@ -32,6 +34,7 @@ public interface DaoCriteria<T> {
      * @param page
      * @return
      */
+    @Override
     default IJPage<T> page(IJPage<T> page){
         return getDao().page(page);
     }
@@ -41,10 +44,12 @@ public interface DaoCriteria<T> {
      * @param id
      * @return
      */
+    @Override
     default T findById(Serializable id){
         return getDao().findById(id);
     }
 
+    @Override
     default Optional<T> findByIdStream(Serializable id){
         return Optional.ofNullable(findById(id));
     }

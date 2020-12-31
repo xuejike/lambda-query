@@ -7,6 +7,7 @@ import com.github.xuejike.query.core.enums.WhereOperation;
 import com.github.xuejike.query.core.exception.LambdaQueryException;
 import com.github.xuejike.query.core.po.*;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -74,10 +75,19 @@ public class MyBatisPlusBuilder {
                     queryWrapper.isNotNull(field);
                     break;
                 case notIn:
-                    queryWrapper.notIn(field,value);
-                    break;
+                    if (value instanceof Collection){
+                        queryWrapper.notIn(field,(Collection<?>) value);
+                    }else{
+                        queryWrapper.notIn(field,value);
+                    }
+                     break;
                 case in:
-                    queryWrapper.in(field,value);
+                    if (value instanceof Collection){
+                        queryWrapper.in(field,(Collection<?>) value);
+                    }else{
+                        queryWrapper.in(field,value);
+                    }
+
                     break;
                 case like:
                     queryWrapper.like(field,likeValue(value));

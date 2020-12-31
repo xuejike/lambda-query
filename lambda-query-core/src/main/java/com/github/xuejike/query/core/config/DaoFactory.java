@@ -1,5 +1,6 @@
 package com.github.xuejike.query.core.config;
 
+import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
 
 /**
@@ -23,5 +24,5 @@ public abstract class DaoFactory {
      * @param <T>
      * @return
      */
-    abstract public <T>DaoCriteria<T> createDao(Class<T> entityCls);
+    abstract public <T> BaseDao<T> createDao(Class<T> entityCls);
 }
