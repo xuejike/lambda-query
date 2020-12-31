@@ -6,7 +6,7 @@
 
     <groupId>com.github.xuejike</groupId>
     <artifactId>lambda-query</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>lambda-query</name>
     <url>https://gitee.com/xuejike/lambda-query.git</url>
 
@@ -45,7 +45,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-        <query.version>1.0.1</query.version>
+        <query.version>1.0.2-SNAPSHOT</query.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>

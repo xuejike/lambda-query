@@ -5,12 +5,12 @@
     <parent>
         <artifactId>lambda-query</artifactId>
         <groupId>com.github.xuejike</groupId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
     <artifactId>lambda-query-core</artifactId>
     <name>lambda-query-core</name>
     <description>Demo project for Spring Boot</description>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
 
     <dependencies>
 
