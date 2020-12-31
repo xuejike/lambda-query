@@ -49,28 +49,56 @@ LambdaQuery 将支持通过Lambda进行多种数据源的查询 实现java端的
 ### 1.依赖引入
 1. springBoot自动配置
 ```xml
+<!--Mongo 查询器依赖-->
       <dependency>
             <groupId>com.github.xuejike</groupId>
             <artifactId>lambda-query-mongo-starter</artifactId>
             <version>${jkquery.version}</version>
         </dependency>
+<!--MybatisPlus 查询器依赖-->
+
+    <dependency>
+    <groupId>com.github.xuejike</groupId>
+    <artifactId>lambda-query-mybatis-plus-starter</artifactId>
+    <version>${jkquery.version}</version>
+    </dependency>
+
 ```
 2. 手动配置
 
 引入依赖
 ```xml
+<!--Mongo 查询器依赖-->
       <dependency>
             <groupId>com.github.xuejike</groupId>
             <artifactId>lambda-query-mongo</artifactId>
             <version>${jkquery.version}</version>
         </dependency>
+
+        <!--MybatisPlus 查询器依赖-->
+
+    <dependency>
+        <groupId>com.github.xuejike</groupId>
+        <artifactId>lambda-query-mybatis-plus</artifactId>
+        <version>${jkquery.version}</version>
+    </dependency>
+
 ```
 
 初始化工厂类
 ```java
+// MongoDB 查询器初始化
+   @Bean
+    public MongoDaoFactory mongoDaoFactory(MongoTemplate mongoTemplate){
+            return new MongoDaoFactory(mongoTemplate);
+    }
 
-MongoDaoFactory mongoDaoFactory =   new MongoDaoFactory(mongoTemplate);
-
+// MybatisPlus 查询器初始化
+    @Bean
+    public MyBatisPlusDaoFactory myBatisPlusDaoFactory(Collection<BaseMapper> mapperCollection){
+            MyBatisPlusDaoFactory myBatisPlusDaoFactory = new MyBatisPlusDaoFactory(mapperCollection);
+            return myBatisPlusDaoFactory;
+    }
 ```
 ### 2.Mongo查询器使用
 
@@ -233,4 +261,20 @@ public CascadeField<TestDoc,TestDoc> of(){
 
 ### 3.MybatisPlus查询器使用
 
+mybatis-plus 实体初始化
+
+```java
+@Data
+@TableName("u1")
+@MyBatisPlusDaoSelect
+public class U1 {
+    @TableId(type = IdType.AUTO)
+    private Long id;
+    private String name;
+    private String type;
+
+}
+
+
+```
 
