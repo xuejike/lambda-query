@@ -3,6 +3,7 @@ package com.github.xuejike.query.core.base;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.log.Log;
 import com.github.xuejike.query.core.criteria.*;
+import com.github.xuejike.query.core.enums.OrderType;
 import com.github.xuejike.query.core.enums.StringMatchMode;
 import com.github.xuejike.query.core.enums.WhereOperation;
 import com.github.xuejike.query.core.exception.LambdaQueryException;
@@ -23,9 +24,10 @@ import java.util.stream.Collectors;
 
 public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  WhereCriteria<C,F>,SelectCriteria<C,F>{
     protected Map<Object, Map<WhereOperation,Object>> whereMap = new ConcurrentHashMap<>();
-    protected List<BaseWhereQuery<T,F,C>> orList = new LinkedList<>();
+    protected List<BaseWhereQuery<T,F,?>> orList = new LinkedList<>();
     protected List<FieldInfo> selectList = new LinkedList<>();
     protected List<FieldInfo> excludeList = new LinkedList<>();
+    protected Map<FieldInfo, OrderType> orderMap = new ConcurrentHashMap<>();
     protected C returnObj = (C)this;
 
     public BaseWhereQuery() {
@@ -220,7 +222,7 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
 
 
     public boolean isEmpty(){
-        return CollUtil.isEmpty(whereMap) && CollUtil.isEmpty(orList);
+        return CollUtil.isEmpty(whereMap) && CollUtil.isEmpty(orList) && CollUtil.isEmpty(selectList) && CollUtil.isEmpty(excludeList) && CollUtil.isEmpty(orderMap);
     }
     public boolean isNotEmpty(){
         return !isEmpty();
@@ -256,7 +258,7 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
         return whereMap;
     }
 
-    public List<BaseWhereQuery<T, F, C>> getOrList() {
+    public List<BaseWhereQuery<T, F, ?>> getOrList() {
         return orList;
     }
 
@@ -284,6 +286,9 @@ public class BaseWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>> implements  Whe
         return queryInfo;
     }
 
+    public Map<FieldInfo, OrderType> getOrderMap() {
+        return orderMap;
+    }
 
     @Override
     public C select(F... fields) {

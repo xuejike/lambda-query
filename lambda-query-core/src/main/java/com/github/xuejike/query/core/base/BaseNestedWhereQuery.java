@@ -7,9 +7,18 @@ import java.util.function.Consumer;
  * @date 2020/12/18
  */
 public class BaseNestedWhereQuery<T,F,C extends BaseWhereQuery<T,F,C>>  extends BaseSimpleWhereQuery<T,F,C>{
-     public C or(Consumer<BaseNestedWhereQuery<T,F,C>> or){
-         BaseNestedWhereQuery<T, F, C> query = new BaseNestedWhereQuery<T, F, C>();
-         or.accept(query);
+
+    public BaseNestedWhereQuery() {
+
+    }
+
+    public BaseNestedWhereQuery(C returnObj) {
+        super(returnObj);
+    }
+
+    public<R extends BaseNestedWhereQuery<T,F,R> > C or(Consumer<BaseNestedWhereQuery<T,F,R>> or){
+        BaseNestedWhereQuery<T,F,R> query = new BaseNestedWhereQuery<T,F,R>();
+        or.accept(query);
          if (query.isNotEmpty()){
              orList.add(query);
          }

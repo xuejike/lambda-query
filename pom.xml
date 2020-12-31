@@ -6,42 +6,23 @@
 
     <groupId>com.github.xuejike</groupId>
     <artifactId>lambda-query</artifactId>
-    <version>1.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>lambda-query</name>
-    <url>https://gitee.com/xuejike/lambda-query.git</url>
-
-    <description>query all in lambda</description>
+    <description>Demo project for Spring Boot</description>
     <modules>
         <module>lambda-query-core</module>
         <module>lambda-query-mongo</module>
-        <module>mongo-demo</module>
-    </modules>
-    <licenses>
-        <license>
-            <name>GNU General Public License v2.0</name>
-            <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+        <module>lambda-query-mybatis-plus</module>
 
-    <scm>
-        <tag>master</tag>
-        <url>https://gitee.com/xuejike/lambda-query.git</url>
-        <connection>scm:git:https://gitee.com/xuejike/lambda-query.git</connection>
-        <developerConnection>scm:git:https://gitee.com/xuejike/lambda-query.git</developerConnection>
-    </scm>
-    <developers>
-        <developer>
-            <name>xuejike</name>
-            <email>245674286@qq.com</email>
-            <organization>xuejike</organization>
-        </developer>
-    </developers>
+        <module>mongo-demo</module>
+        <module>lambda-query-mongo-starter</module>
+        <module>lambda-query-mybatis-plus-starter</module>
+    </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-        <query.version>1.0</query.version>
+        <query.version>1.0.1-SNAPSHOT</query.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
@@ -58,7 +39,6 @@
     </distributionManagement>
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -130,20 +110,20 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <version>1.5</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>sign-artifacts</id>-->
+<!--                        <phase>verify</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

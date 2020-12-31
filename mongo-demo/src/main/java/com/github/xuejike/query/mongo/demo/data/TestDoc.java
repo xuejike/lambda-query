@@ -1,5 +1,6 @@
 package com.github.xuejike.query.mongo.demo.data;
 
+import com.github.xuejike.query.mongo.annotation.MongoDaoSelect;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -12,6 +13,7 @@ import java.util.List;
  */
 @Document("demo_doc")
 @Data
+@MongoDaoSelect
 public class TestDoc {
     @MongoId
     private String id;

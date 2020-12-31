@@ -2,6 +2,7 @@ package com.github.xuejike.query.core.criteria;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author xuejike
@@ -17,6 +18,12 @@ public interface DaoCriteria<T> {
     default List<T> list(){
         return getDao().list();
     }
+    default T getFirst(){
+        return getDao().getFirst();
+    }
+    default Optional<T> getFirstStream(){
+        return Optional.ofNullable(getFirst());
+    }
     default Long count(){
         return getDao().count();
     }
@@ -25,7 +32,7 @@ public interface DaoCriteria<T> {
      * @param page
      * @return
      */
-    default IPage<T> page(IPage<T> page){
+    default IJPage<T> page(IJPage<T> page){
         return getDao().page(page);
     }
 
@@ -38,14 +45,27 @@ public interface DaoCriteria<T> {
         return getDao().findById(id);
     }
 
+    default Optional<T> findByIdStream(Serializable id){
+        return Optional.ofNullable(findById(id));
+    }
     /**
      * 根据ID进行更新
      * @param entity
      * @return
      */
-    default T updateById(T entity){
+    default boolean updateById(T entity){
         return getDao().updateById(entity);
     }
+
+    /**
+     * 插入
+     * @param entity
+     * @return
+     */
+    default T insert(T entity){
+        return getDao().insert(entity);
+    }
+
     default Long updateFindAll(){
         return getDao().updateFindAll();
     }
@@ -67,23 +87,4 @@ public interface DaoCriteria<T> {
         return getDao().removeQueryAll();
     }
 
-    /**
-     * 执行更新
-     * @param query
-     * @param param
-     * @return
-     */
-    default long executeUpdate(Object query,Object ...param){
-        return getDao().executeUpdate(query, param);
-    }
-
-    /**
-     * 执行查询
-     * @param query
-     * @param param
-     * @return
-     */
-    default List<?> execute(Object query,Object ...param){
-        return getDao().execute(query, param);
-    }
 }

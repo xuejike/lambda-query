@@ -1,18 +1,15 @@
 package com.github.xuejike.query.mongo;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import com.github.xuejike.query.core.base.BaseNestedWhereQuery;
+import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.base.BaseWhereQuery;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
-import com.github.xuejike.query.core.criteria.IPage;
-import com.github.xuejike.query.core.criteria.InjectionBaseQuery;
+import com.github.xuejike.query.core.criteria.IJPage;
+import com.github.xuejike.query.core.enums.OrderType;
 import com.github.xuejike.query.core.po.FieldInfo;
-import com.github.xuejike.query.core.po.Page;
-import com.github.xuejike.query.core.po.QueryInfo;
-import com.github.xuejike.query.core.po.QueryItem;
 import com.mongodb.client.result.DeleteResult;
 import org.bson.Document;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Field;
@@ -21,19 +18,23 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
+import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 
 /**
  * @author xuejike
  * @date 2020/12/18
  */
-public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
+public class MongoDao<T>  extends BaseDao<T> {
     MongoTemplate mongoTemplate;
-    private BaseWhereQuery baseWhereQuery;
-    private Class<T> entityCls;
+
+
 
     public MongoDao(MongoTemplate mongoTemplate, Class<T> entityCls) {
+        super(entityCls);
         this.mongoTemplate = mongoTemplate;
-        this.entityCls = entityCls;
+
     }
 
 
@@ -53,6 +54,17 @@ public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
                 fields.exclude(MongoQueryBuilder.buildField(info));
             }
         }
+        if (CollUtil.isNotEmpty(baseWhereQuery.getOrderMap())){
+            Map<FieldInfo, OrderType> orderMap = baseWhereQuery.getOrderMap();
+            List<Sort.Order> orderList = orderMap.entrySet().stream().map(it -> {
+                if (it.getValue() == OrderType.desc) {
+                    return Sort.Order.desc(MongoQueryBuilder.buildField(it.getKey()));
+                } else {
+                    return Sort.Order.asc(MongoQueryBuilder.buildField(it.getKey()));
+                }
+            }).collect(Collectors.toList());
+            builder.with(Sort.by(orderList));
+        }
         return builder;
 
     }
@@ -63,6 +75,18 @@ public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
     }
 
 
+    @Override
+    public T getFirst() {
+        Query query = buildQuery();
+        query.limit(1);
+        List<T> list = mongoTemplate.find(query, entityCls);
+        if (list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
+
+    }
 
     @Override
     public List<T> list() {
@@ -79,7 +103,7 @@ public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
     }
 
     @Override
-    public IPage<T> page(IPage<T> page) {
+    public IJPage<T> page(IJPage<T> page) {
         Query query = buildQuery();
          if (page.isHaveTotal()){
             long count = mongoTemplate.count(query, entityCls);
@@ -99,8 +123,15 @@ public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
     }
 
     @Override
-    public T updateById(T entity) {
-        return mongoTemplate.save(entity);
+    public boolean updateById(T entity) {
+        T save = mongoTemplate.save(entity);
+        return true;
+    }
+
+    @Override
+    public T insert(T entity) {
+        T insert = mongoTemplate.insert(entity);
+        return insert;
     }
 
     @Override
@@ -124,25 +155,7 @@ public class MongoDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
         return mongoTemplate.remove(query,entityCls).getDeletedCount();
     }
 
-    @Override
-    public long executeUpdate(Object query, Object... param) {
-        if (query instanceof Document){
-            Document document = mongoTemplate.executeCommand(((Document) query));
-        }else if (query instanceof String){
-            Document document = mongoTemplate.executeCommand(((String) query));
-        }
-        return 0L;
-    }
 
-    @Override
-    public List<?> execute(Object query, Object... param) {
-        if (query instanceof Document){
-            Document document = mongoTemplate.executeCommand(((Document) query));
-        }else if (query instanceof String){
-            Document document = mongoTemplate.executeCommand(((String) query));
-        }
-        return null;
-    }
 
     @Override
     public void injectionBaseWhereQuery(BaseWhereQuery baseWhereQuery) {

@@ -5,12 +5,12 @@
     <parent>
         <artifactId>lambda-query</artifactId>
         <groupId>com.github.xuejike</groupId>
-        <version>1.0</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mongo-demo</artifactId>
-    <version>1.0</version>
+
 
 
     <dependencies>
@@ -28,6 +28,17 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
@@ -41,6 +52,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xuejike</groupId>
+            <artifactId>lambda-query-mybatis-plus</artifactId>
+            <version>${query.version}</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
