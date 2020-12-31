@@ -93,6 +93,9 @@ public class TestMain {
         System.out.println(JSON.toJSONString(list));
     }
 
+    /**
+     * == 查询
+     */
     @Test
     public void testEq(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).eq(TestDoc::getName, "name_1").list();
@@ -100,6 +103,11 @@ public class TestMain {
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_1");
     }
+
+    /**
+     * 大于号查询
+     *
+     */
     @Test
     public void testGt(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gt(TestDoc::getNum,3 ).list();
@@ -107,6 +115,10 @@ public class TestMain {
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_4");
     }
+
+    /**
+     * 大于等于查询
+     */
     @Test
     public void testGte(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gte(TestDoc::getNum,4 ).list();
@@ -114,6 +126,10 @@ public class TestMain {
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_4");
     }
+
+    /**
+     * 小于号查询
+     */
     @Test
     public void testLt(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lt(TestDoc::getNum,1 ).list();
@@ -121,6 +137,10 @@ public class TestMain {
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_0");
     }
+
+    /**
+     * 小于等于查询
+     */
     @Test
     public void testLte(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lte(TestDoc::getNum,0 ).list();
@@ -128,6 +148,10 @@ public class TestMain {
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_0");
     }
+
+    /**
+     * In 查询
+     */
     @Test
     public void testIn(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
@@ -136,6 +160,10 @@ public class TestMain {
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_0");
     }
+
+    /**
+     * NotIn 查询
+     */
     @Test
     public void testNotIn(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
@@ -144,6 +172,10 @@ public class TestMain {
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_4");
     }
+
+    /**
+     * or 查询
+     */
     @Test
     public void testOr(){
         List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).or().eq(TestDoc::getNum, 0).or().eq(TestDoc::getNum, 1).list();
@@ -158,9 +190,31 @@ public class TestMain {
 
 
     }
+
+    /**
+     * 排序查询
+     */
     @Test
     public void testOrder(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).in(TestDoc::getNum, 1, 2).orderAsc(TestDoc::getNum).list();
+        Assertions.assertEquals(list.size(),2);
+        Assertions.assertEquals(list.get(0).getNum(),1);
+        Assertions.assertEquals(list.get(1).getNum(),2);
 
+        list = JkQuerys.lambdaQuery(TestDoc.class).in(TestDoc::getNum, 1, 2).orderDesc(TestDoc::getNum).list();
+        Assertions.assertEquals(list.size(),2);
+        Assertions.assertEquals(list.get(0).getNum(),2);
+        Assertions.assertEquals(list.get(1).getNum(),1);
+    }
+
+    /**
+     * 二级字段查询
+     */
+    @Test
+    public void testSubField(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).eq(of().subList(TestDoc::getToc).sub(TestDoc.Title::getTitle), "sub_title_0_0").list();
+        Assertions.assertEquals(list.size(),1);
+        Assertions.assertEquals(list.get(0).getNum(),0);
     }
     public CascadeField<TestDoc,TestDoc> of(){
         return new CascadeField<>();
