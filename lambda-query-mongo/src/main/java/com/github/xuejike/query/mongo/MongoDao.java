@@ -75,6 +75,18 @@ public class MongoDao<T>  extends BaseDao<T> {
     }
 
 
+    @Override
+    public T getFirst() {
+        Query query = buildQuery();
+        query.limit(1);
+        List<T> list = mongoTemplate.find(query, entityCls);
+        if (list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
+
+    }
 
     @Override
     public List<T> list() {

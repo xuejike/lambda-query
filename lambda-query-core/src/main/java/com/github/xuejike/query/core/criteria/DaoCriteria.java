@@ -2,6 +2,7 @@ package com.github.xuejike.query.core.criteria;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author xuejike
@@ -16,6 +17,12 @@ public interface DaoCriteria<T> {
      */
     default List<T> list(){
         return getDao().list();
+    }
+    default T getFirst(){
+        return getDao().getFirst();
+    }
+    default Optional<T> getFirstStream(){
+        return Optional.ofNullable(getFirst());
     }
     default Long count(){
         return getDao().count();
@@ -38,6 +45,9 @@ public interface DaoCriteria<T> {
         return getDao().findById(id);
     }
 
+    default Optional<T> findByIdStream(Serializable id){
+        return Optional.ofNullable(findById(id));
+    }
     /**
      * 根据ID进行更新
      * @param entity

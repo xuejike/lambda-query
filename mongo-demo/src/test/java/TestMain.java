@@ -17,6 +17,8 @@ import com.github.xuejike.query.mongo.demo.mybatis.entity.U1;
 import com.github.xuejike.query.mongo.demo.mybatis.mapper.U1Mapper;
 import com.github.xuejike.query.mybatisplus.MyBatisPlusDaoFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ import java.util.Map;
 @SpringBootTest(classes = App.class)
 @ContextConfiguration
 @Slf4j
-@Rollback(value = false)
+@Rollback(value = true)
 public class TestMain {
     @Autowired
     MongoTemplate mongoTemplate;
@@ -53,7 +55,7 @@ public class TestMain {
         new MongoDaoFactory(mongoTemplate);
     }
 
-    @Test
+//    @BeforeEach
     public void save(){
         for (long i = 0; i < 5; i++) {
             TestDoc testDoc = new TestDoc();
@@ -89,6 +91,76 @@ public class TestMain {
                 .list();
 
         System.out.println(JSON.toJSONString(list));
+    }
+
+    @Test
+    public void testEq(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).eq(TestDoc::getName, "name_1").list();
+        Assertions.assertEquals(list.size(),1);
+        TestDoc testDoc = list.get(0);
+        Assertions.assertEquals(testDoc.getTitle(),"title_1");
+    }
+    @Test
+    public void testGt(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gt(TestDoc::getNum,3 ).list();
+        Assertions.assertEquals(list.size(),1);
+        TestDoc testDoc = list.get(0);
+        Assertions.assertEquals(testDoc.getTitle(),"title_4");
+    }
+    @Test
+    public void testGte(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gte(TestDoc::getNum,4 ).list();
+        Assertions.assertEquals(list.size(),1);
+        TestDoc testDoc = list.get(0);
+        Assertions.assertEquals(testDoc.getTitle(),"title_4");
+    }
+    @Test
+    public void testLt(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lt(TestDoc::getNum,1 ).list();
+        Assertions.assertEquals(list.size(),1);
+        TestDoc testDoc = list.get(0);
+        Assertions.assertEquals(testDoc.getTitle(),"title_0");
+    }
+    @Test
+    public void testLte(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lte(TestDoc::getNum,0 ).list();
+        Assertions.assertEquals(list.size(),1);
+        TestDoc testDoc = list.get(0);
+        Assertions.assertEquals(testDoc.getTitle(),"title_0");
+    }
+    @Test
+    public void testIn(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
+                .in(TestDoc::getTitle,"title_0" ).list();
+        Assertions.assertEquals(list.size(),1);
+        TestDoc testDoc = list.get(0);
+        Assertions.assertEquals(testDoc.getTitle(),"title_0");
+    }
+    @Test
+    public void testNotIn(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
+                .notIn(TestDoc::getTitle,"title_0","title_1","title_2","title_3" ).list();
+        Assertions.assertEquals(list.size(),1);
+        TestDoc testDoc = list.get(0);
+        Assertions.assertEquals(testDoc.getTitle(),"title_4");
+    }
+    @Test
+    public void testOr(){
+        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).or().eq(TestDoc::getNum, 0).or().eq(TestDoc::getNum, 1).list();
+        Assertions.assertEquals(list.size(),2);
+
+        list = JkQuerys.lambdaQuery(TestDoc.class).or(it->{
+            it.eq(TestDoc::getNum,0).eq(TestDoc::getName,"name_0");
+        }).or(it->{
+            it.eq(TestDoc::getNum,1).eq(TestDoc::getName,"name_1");
+        }).list();
+        Assertions.assertEquals(list.size(),2);
+
+
+    }
+    @Test
+    public void testOrder(){
+
     }
     public CascadeField<TestDoc,TestDoc> of(){
         return new CascadeField<>();

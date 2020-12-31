@@ -52,9 +52,16 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
         }
         return build;
     }
+
     @Override
     public DaoCriteria<T> getDao() {
         return this;
+    }
+
+    @Override
+    public T getFirst() {
+        QueryWrapper<T> query = buildQuery();
+        return baseMapper.selectOne(query);
     }
 
     @Override
