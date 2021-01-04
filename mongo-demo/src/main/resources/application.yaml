@@ -19,3 +19,5 @@ logging:
 server:
   port: 7000
 debug: true
+mybatis-plus:
+  type-enums-package: com.github.xuejike.query.mongo.demo.enums

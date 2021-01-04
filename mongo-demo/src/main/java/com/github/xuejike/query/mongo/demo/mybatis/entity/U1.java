@@ -3,6 +3,7 @@ package com.github.xuejike.query.mongo.demo.mybatis.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.github.xuejike.query.mongo.demo.enums.U1Status;
 import com.github.xuejike.query.mybatisplus.annotation.MyBatisPlusDaoSelect;
 import lombok.Data;
 
@@ -19,5 +20,6 @@ public class U1 {
     private String name;
     private String type;
     private Long u2Id;
-
+    
+    private U1Status status;
 }

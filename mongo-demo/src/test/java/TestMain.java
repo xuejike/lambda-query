@@ -1,39 +1,29 @@
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.TypeUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.github.xuejike.query.core.JkLambdaQuery;
+import com.github.xuejike.query.core.JLambdaQuery;
 
-import com.github.xuejike.query.core.JkQuerys;
+import com.github.xuejike.query.core.JQuerys;
 import com.github.xuejike.query.core.tool.lambda.CascadeField;
-import com.github.xuejike.query.mongo.MongoDao;
 
 
 import com.github.xuejike.query.mongo.MongoDaoFactory;
 import com.github.xuejike.query.mongo.demo.App;
 import com.github.xuejike.query.mongo.demo.data.TestDoc;
 import com.github.xuejike.query.mongo.demo.mybatis.entity.U1;
-import com.github.xuejike.query.mongo.demo.mybatis.mapper.U1Mapper;
 import com.github.xuejike.query.mybatisplus.MyBatisPlusDaoFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xuejike
@@ -77,7 +67,7 @@ public class TestMain {
 
 
 
-        JkLambdaQuery<TestDoc> lambda = JkQuerys.lambdaQuery(TestDoc.class);
+        JLambdaQuery<TestDoc> lambda = JQuerys.lambdaQuery(TestDoc.class);
 
 //        Query query = new Query();
 //        query.addCriteria(new Criteria().orOperator(Criteria.where("name").is("999"))
@@ -97,7 +87,7 @@ public class TestMain {
      */
     @Test
     public void testEq(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).eq(TestDoc::getName, "name_1").list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).eq(TestDoc::getName, "name_1").list();
         Assertions.assertEquals(list.size(),1);
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_1");
@@ -109,7 +99,7 @@ public class TestMain {
      */
     @Test
     public void testGt(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gt(TestDoc::getNum,3 ).list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).gt(TestDoc::getNum,3 ).list();
         Assertions.assertEquals(list.size(),1);
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_4");
@@ -120,7 +110,7 @@ public class TestMain {
      */
     @Test
     public void testGte(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).gte(TestDoc::getNum,4 ).list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).gte(TestDoc::getNum,4 ).list();
         Assertions.assertEquals(list.size(),1);
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_4");
@@ -131,7 +121,7 @@ public class TestMain {
      */
     @Test
     public void testLt(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lt(TestDoc::getNum,1 ).list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).lt(TestDoc::getNum,1 ).list();
         Assertions.assertEquals(list.size(),1);
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_0");
@@ -142,7 +132,7 @@ public class TestMain {
      */
     @Test
     public void testLte(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).lte(TestDoc::getNum,0 ).list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).lte(TestDoc::getNum,0 ).list();
         Assertions.assertEquals(list.size(),1);
         TestDoc testDoc = list.get(0);
         Assertions.assertEquals(testDoc.getTitle(),"title_0");
@@ -153,7 +143,7 @@ public class TestMain {
      */
     @Test
     public void testIn(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class)
                 .in(TestDoc::getTitle,"title_0" ).list();
         Assertions.assertEquals(list.size(),1);
         TestDoc testDoc = list.get(0);
@@ -165,7 +155,7 @@ public class TestMain {
      */
     @Test
     public void testNotIn(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class)
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class)
                 .notIn(TestDoc::getTitle,"title_0","title_1","title_2","title_3" ).list();
         Assertions.assertEquals(list.size(),1);
         TestDoc testDoc = list.get(0);
@@ -177,10 +167,10 @@ public class TestMain {
      */
     @Test
     public void testOr(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).or().eq(TestDoc::getNum, 0).or().eq(TestDoc::getNum, 1).list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).or().eq(TestDoc::getNum, 0).or().eq(TestDoc::getNum, 1).list();
         Assertions.assertEquals(list.size(),2);
 
-        list = JkQuerys.lambdaQuery(TestDoc.class).or(it->{
+        list = JQuerys.lambdaQuery(TestDoc.class).or(it->{
             it.eq(TestDoc::getNum,0).eq(TestDoc::getName,"name_0");
         }).or(it->{
             it.eq(TestDoc::getNum,1).eq(TestDoc::getName,"name_1");
@@ -195,12 +185,12 @@ public class TestMain {
      */
     @Test
     public void testOrder(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).in(TestDoc::getNum, 1, 2).orderAsc(TestDoc::getNum).list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).in(TestDoc::getNum, 1, 2).orderAsc(TestDoc::getNum).list();
         Assertions.assertEquals(list.size(),2);
         Assertions.assertEquals(list.get(0).getNum(),1);
         Assertions.assertEquals(list.get(1).getNum(),2);
 
-        list = JkQuerys.lambdaQuery(TestDoc.class).in(TestDoc::getNum, 1, 2).orderDesc(TestDoc::getNum).list();
+        list = JQuerys.lambdaQuery(TestDoc.class).in(TestDoc::getNum, 1, 2).orderDesc(TestDoc::getNum).list();
         Assertions.assertEquals(list.size(),2);
         Assertions.assertEquals(list.get(0).getNum(),2);
         Assertions.assertEquals(list.get(1).getNum(),1);
@@ -211,7 +201,7 @@ public class TestMain {
      */
     @Test
     public void testSubField(){
-        List<TestDoc> list = JkQuerys.lambdaQuery(TestDoc.class).eq(of().subList(TestDoc::getToc).sub(TestDoc.Title::getTitle), "sub_title_0_0").list();
+        List<TestDoc> list = JQuerys.lambdaQuery(TestDoc.class).eq(of().subList(TestDoc::getToc).sub(TestDoc.Title::getTitle), "sub_title_0_0").list();
         Assertions.assertEquals(list.size(),1);
         Assertions.assertEquals(list.get(0).getNum(),0);
     }
@@ -230,7 +220,7 @@ public class TestMain {
     }
     @Test
     public void queryU1(){
-        List<U1> list = JkQuerys.lambdaQuery(U1.class)
+        List<U1> list = JQuerys.lambdaQuery(U1.class)
                 .eq(U1::getId, 1)
                 .or().eq(U1::getId,2)
                 .or(or->

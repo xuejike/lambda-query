@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.xuejike.query.core.JQuerys;
 import com.github.xuejike.query.mongo.demo.App;
+import com.github.xuejike.query.mongo.demo.enums.U1Status;
 import com.github.xuejike.query.mongo.demo.mybatis.entity.U1;
 import com.github.xuejike.query.mongo.demo.mybatis.entity.U2;
 import com.github.xuejike.query.mongo.demo.vo.U1Vo;
@@ -35,6 +36,7 @@ public class MyBatisTest {
     @Test
     public void list(){
         List<U1Vo> list = JQuerys.lambdaQuery(U1.class)
+                .eq(U1::getStatus, U1Status.T1)
                 .loadRef(U1::getU2Id, U2.class, U2::getId)
                 .map(U1Vo.class).list();
         System.out.println(JSON.toJSONString(list));
