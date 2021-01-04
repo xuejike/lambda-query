@@ -30,7 +30,8 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
 
     }
     protected QueryWrapper<T> buildQuery(){
-        QueryWrapper<T> build = new QueryWrapper<>();
+        QueryWrapper<T> build = new QueryWrapper<T>();
+        build.setEntityClass(entityCls);
 
         if (baseConditionsVo != null){
             MyBatisPlusBuilder.build(build,baseConditionsVo.getWhere());
