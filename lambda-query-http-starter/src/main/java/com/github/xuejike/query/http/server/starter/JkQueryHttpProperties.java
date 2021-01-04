@@ -10,6 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("jk-query.http")
 @Data
 public class JkQueryHttpProperties {
-    private String httpServicePath = "/lambda/";
+    private String httpServicePath = "/lambda";
 
 }

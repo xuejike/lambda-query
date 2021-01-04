@@ -1,6 +1,7 @@
 package com.github.xuejike.query.http.server.starter;
 
 import com.github.xuejike.query.http.LambdaQueryHttpConfig;
+import com.github.xuejike.query.http.client.HttpClientFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.cloud.client.loadbalancer.ServiceInstanceChooser;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({HttpServiceConfig.class})
 public class AutoConfig {
+
     @Bean
     @ConditionalOnBean(ServiceInstanceChooser.class)
     public ServiceSelect serviceSelect(ServiceInstanceChooser loadBalancer){
@@ -25,6 +27,10 @@ public class AutoConfig {
         LbHttpClient lbHttpClient = new LbHttpClient(serviceSelect);
         LambdaQueryHttpConfig.getInstance().setHttpClient(lbHttpClient);
         return lbHttpClient;
+    }
+    @Bean
+    public HttpClientFactory httpClientFactory(){
+        return new HttpClientFactory();
     }
 
 }

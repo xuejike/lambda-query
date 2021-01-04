@@ -13,6 +13,7 @@ import com.github.xuejike.query.core.po.JPage;
 import com.github.xuejike.query.core.po.LoadRefInfo;
 import com.github.xuejike.query.core.tool.ELParseTool;
 import com.github.xuejike.query.core.tool.lambda.CascadeField;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
  * @author xuejike
  * @date 2020/12/31
  */
+@Slf4j
 public class MapDao<T,R> implements SelectDaoCriteria<R>, GetDaoCriteria<T> {
 
     private BaseDao<T> daoCriteria;
@@ -48,25 +50,28 @@ public class MapDao<T,R> implements SelectDaoCriteria<R>, GetDaoCriteria<T> {
 
     private List<R> loadRefMap(List<T> list) {
         Map<FieldInfo, LoadRefInfo<?>> refClassMap = daoCriteria.getRefClassMap();
-        HashMap<String, Map<Object, ?>> refMap = new HashMap<>(refClassMap.size());
-        for (Map.Entry<FieldInfo, LoadRefInfo<?>> entry : refClassMap.entrySet()) {
+        log.debug("loadRefMap 耗时统计:加载引用对象{}:",refClassMap.size());
+        long begin = System.currentTimeMillis();
+        Map<String, ? extends Map<Object, ?>> refMap = refClassMap.entrySet().parallelStream().collect(Collectors
+                .toMap(it -> it.getKey().getField(), entry -> {
             Set<Object> refIdList = list.stream().map(it -> ReflectUtil.getFieldValue(it, entry.getKey().getField())).collect(Collectors.toSet());
             List<?> refList = JkQuerys.lambdaQuery(entry.getValue().getRefClass())
                     .in(new CascadeField().subFieldName(entry.getValue().getTargetField().getField()), refIdList)
                     .list();
             Map<Object, ?> map = refList.stream().collect(Collectors.toMap(it -> ReflectUtil.getFieldValue(it, entry.getValue().getTargetField().getField()), it -> it));
-            refMap.put(entry.getKey().getField(),map);
-        }
-
-
+                    log.debug("loadRefMap 耗时统计:关联属性{},加载耗时:{}",entry.getKey().getField(),System.currentTimeMillis()-begin);
+            return map;
+        }));
+        log.debug("loadRefMap 耗时统计:关联属性加载总耗时:{}",System.currentTimeMillis()-begin);
+        long elBegin = System.currentTimeMillis();
         List<R> collect = list.parallelStream().map(item -> {
             R r = BeanUtil.copyProperties(item, resultCls);
-
-            Map<String, Object> varMap = refMap.entrySet().parallelStream()
-                    .collect(Collectors.toMap(
-                            entry -> ELParseTool.getSetRefValue(resultCls, entry.getKey()),
-                            entry -> entry.getValue().get(ReflectUtil.getFieldValue(item, entry.getKey()))));
-
+            HashMap<String, Object> varMap = new HashMap<>();
+            for (Map.Entry<String, ? extends Map<Object, ?>> entry : refMap.entrySet()) {
+                String varName = ELParseTool.getSetRefValue(resultCls, entry.getKey());
+                Object varValue = entry.getValue().get(ReflectUtil.getFieldValue(item, entry.getKey()));
+                varMap.put(varName,varValue);
+            }
             Map<Field, String> fieldStringMap = ELParseTool.getRefValues(resultCls);
             fieldStringMap.entrySet().parallelStream().forEach(entry -> {
                 ReflectUtil.setFieldValue(r, entry.getKey(), ELParseTool.parseEl(entry.getValue(), varMap, entry.getKey().getType()));
@@ -74,6 +79,7 @@ public class MapDao<T,R> implements SelectDaoCriteria<R>, GetDaoCriteria<T> {
 
             return r;
         }).collect(Collectors.toList());
+        log.debug("loadRefMap 耗时统计:合并数据总耗时:{}",System.currentTimeMillis()-elBegin);
         return collect;
     }
 

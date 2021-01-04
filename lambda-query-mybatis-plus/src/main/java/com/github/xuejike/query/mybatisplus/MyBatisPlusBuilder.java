@@ -1,14 +1,21 @@
 package com.github.xuejike.query.mybatisplus;
 
+import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.SimpleCache;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.xuejike.query.core.enums.WhereOperation;
 import com.github.xuejike.query.core.exception.LambdaQueryException;
 import com.github.xuejike.query.core.po.*;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 /**
@@ -16,6 +23,8 @@ import java.util.function.Consumer;
  * @date 2020/12/28
  */
 public class MyBatisPlusBuilder {
+    static SimpleCache<Class<?>,Map<String,String>> entityMap = new SimpleCache<Class<?>,Map<String,String>>();
+
     public static<T> QueryWrapper<T> build(QueryInfo queryInfo ){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
 
@@ -40,7 +49,7 @@ public class MyBatisPlusBuilder {
     }
 
     private static <T> void buildField(QueryWrapper<T> queryWrapper, QueryItem item) {
-        String field = buildField(item.getField());
+        String field = buildField(queryWrapper.getEntityClass(),item.getField());
 
         for (Map.Entry<WhereOperation, Object> entry : item.getVal().entrySet()) {
             Object value = entry.getValue();
@@ -98,9 +107,24 @@ public class MyBatisPlusBuilder {
         }
     }
 
-    public static String buildField(FieldInfo fieldInfo){
-        // TODO: 2020/12/30 对注解自定义列处理
-        StringBuilder builder = new StringBuilder(fieldInfo.getField());
+    public static String buildField(Class<?> entityCls,FieldInfo fieldInfo){
+        Map<String, String> map = entityMap.get(entityCls);
+        if (map == null){
+            map = new ConcurrentHashMap<>();
+            entityMap.put(entityCls,map);
+            Field[] fields = ReflectUtil.getFields(entityCls);
+            for (Field field : fields) {
+                TableField tableField = AnnotationUtil.getAnnotation(field, TableField.class);
+                if (tableField != null && StrUtil.isNotBlank(tableField.value())){
+                    map.put(field.getName(),tableField.value());
+                }else{
+                    map.put(field.getName(),StrUtil.toUnderlineCase(field.getName()));
+                }
+            }
+        }
+
+
+        StringBuilder builder = new StringBuilder(map.getOrDefault(fieldInfo.getField(),StrUtil.toUnderlineCase(fieldInfo.getField())));
        if (fieldInfo.getSubList().size()>0){
            throw new LambdaQueryException("mybatis 暂不支持 二级数据查询");
        }

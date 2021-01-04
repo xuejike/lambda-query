@@ -45,7 +45,6 @@
             <groupId>com.github.xuejike</groupId>
             <artifactId>lambda-query-http</artifactId>
             <version>${query.version}</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

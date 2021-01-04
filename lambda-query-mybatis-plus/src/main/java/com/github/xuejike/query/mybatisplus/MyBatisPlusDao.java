@@ -36,15 +36,15 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
             MyBatisPlusBuilder.build(build,baseConditionsVo.getWhere());
             if (CollUtil.isNotEmpty(baseConditionsVo.getSelectList())){
                 List<FieldInfo> selectList = baseConditionsVo.getSelectList();
-                build.select(selectList.stream().map(MyBatisPlusBuilder::buildField).toArray(String[]::new));
+                build.select(selectList.stream().map(it->MyBatisPlusBuilder.buildField(entityCls,it)).toArray(String[]::new));
             }
             if (CollUtil.isNotEmpty(baseConditionsVo.getOrderMap())){
                 Map<FieldInfo, OrderType> orderMap = baseConditionsVo.getOrderMap();
                 orderMap.entrySet().forEach(it->{
                     if (it.getValue() == OrderType.desc){
-                        build.orderByDesc(MyBatisPlusBuilder.buildField(it.getKey()));
+                        build.orderByDesc(MyBatisPlusBuilder.buildField(entityCls,it.getKey()));
                     }else{
-                        build.orderByAsc(MyBatisPlusBuilder.buildField(it.getKey()));
+                        build.orderByAsc(MyBatisPlusBuilder.buildField(entityCls,it.getKey()));
                     }
                 });
             }
@@ -54,7 +54,7 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
          MyBatisPlusBuilder.build(build,queryInfo);
         if (CollUtil.isNotEmpty(baseWhereQuery.getSelectList())){
             List<FieldInfo> selectList = baseWhereQuery.getSelectList();
-            build.select(selectList.stream().map(MyBatisPlusBuilder::buildField).toArray(String[]::new));
+            build.select(selectList.stream().map(it->MyBatisPlusBuilder.buildField(entityCls,it)).toArray(String[]::new));
         }
         if (CollUtil.isNotEmpty(baseWhereQuery.getExcludeList())){
             List<FieldInfo> excludeList = baseWhereQuery.getExcludeList();
@@ -64,9 +64,9 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
             Map<FieldInfo, OrderType> orderMap = baseWhereQuery.getOrderMap();
             orderMap.entrySet().forEach(it->{
                 if (it.getValue() == OrderType.desc){
-                    build.orderByDesc(MyBatisPlusBuilder.buildField(it.getKey()));
+                    build.orderByDesc(MyBatisPlusBuilder.buildField(entityCls,it.getKey()));
                 }else{
-                    build.orderByAsc(MyBatisPlusBuilder.buildField(it.getKey()));
+                    build.orderByAsc(MyBatisPlusBuilder.buildField(entityCls,it.getKey()));
                 }
             });
         }
