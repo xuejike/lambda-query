@@ -40,6 +40,8 @@
         <module>mongo-demo</module>
         <module>lambda-query-mongo-starter</module>
         <module>lambda-query-mybatis-plus-starter</module>
+        <module>lambda-query-http</module>
+        <module>lambda-query-http-starter</module>
     </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -47,12 +49,23 @@
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <query.version>1.0.2-SNAPSHOT</query.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+        <hutool.version>5.5.2</hutool.version>
     </properties>
 
     <dependencies>
 
-
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.30</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.16</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <distributionManagement>
         <snapshotRepository>

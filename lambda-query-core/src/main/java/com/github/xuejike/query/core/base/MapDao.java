@@ -47,7 +47,7 @@ public class MapDao<T,R> implements SelectDaoCriteria<R>, GetDaoCriteria<T> {
     }
 
     private List<R> loadRefMap(List<T> list) {
-        Map<FieldInfo, LoadRefInfo<?>> refClassMap = daoCriteria.baseWhereQuery.getRefClassMap();
+        Map<FieldInfo, LoadRefInfo<?>> refClassMap = daoCriteria.getRefClassMap();
         HashMap<String, Map<Object, ?>> refMap = new HashMap<>(refClassMap.size());
         for (Map.Entry<FieldInfo, LoadRefInfo<?>> entry : refClassMap.entrySet()) {
             Set<Object> refIdList = list.stream().map(it -> ReflectUtil.getFieldValue(it, entry.getKey().getField())).collect(Collectors.toSet());

@@ -39,34 +39,65 @@ public class MongoDao<T>  extends BaseDao<T> {
 
 
     private Query buildQuery(){
-        Query builder = MongoQueryBuilder.builder(baseWhereQuery.buildQueryInfo());
-        if (CollUtil.isNotEmpty(baseWhereQuery.getSelectList())){
-            Field fields = builder.fields();
-            List<FieldInfo> list = baseWhereQuery.getSelectList();
-            for (FieldInfo info : list) {
-                fields.include(MongoQueryBuilder.buildField(info));
+        Query builder = new Query();
+        if (baseConditionsVo != null){
+            MongoQueryBuilder.builder(builder,baseConditionsVo.getWhere());
+            if (CollUtil.isNotEmpty(baseConditionsVo.getSelectList())){
+                List<FieldInfo> list = baseConditionsVo.getSelectList();
+                builderSelectedField(builder, list);
+            }
+            if (CollUtil.isNotEmpty(baseConditionsVo.getExcludeList())){
+                List<FieldInfo> list = baseConditionsVo.getExcludeList();
+                builderExclude(builder, list);
+            }
+            if (CollUtil.isNotEmpty(baseConditionsVo.getOrderMap())){
+                Map<FieldInfo, OrderType> orderMap = baseConditionsVo.getOrderMap();
+                builderOrder(builder, orderMap);
             }
         }
+        MongoQueryBuilder.builder(builder,baseWhereQuery.buildQueryInfo());
+
+
+        if (CollUtil.isNotEmpty(baseWhereQuery.getSelectList())){
+            List<FieldInfo> list = baseWhereQuery.getSelectList();
+            builderSelectedField(builder,list);
+        }
         if (CollUtil.isNotEmpty(baseWhereQuery.getExcludeList())){
-            Field fields = builder.fields();
             List<FieldInfo> list = baseWhereQuery.getExcludeList();
-            for (FieldInfo info : list) {
-                fields.exclude(MongoQueryBuilder.buildField(info));
-            }
+            builderExclude(builder, list);
         }
         if (CollUtil.isNotEmpty(baseWhereQuery.getOrderMap())){
             Map<FieldInfo, OrderType> orderMap = baseWhereQuery.getOrderMap();
-            List<Sort.Order> orderList = orderMap.entrySet().stream().map(it -> {
-                if (it.getValue() == OrderType.desc) {
-                    return Sort.Order.desc(MongoQueryBuilder.buildField(it.getKey()));
-                } else {
-                    return Sort.Order.asc(MongoQueryBuilder.buildField(it.getKey()));
-                }
-            }).collect(Collectors.toList());
-            builder.with(Sort.by(orderList));
+            builderOrder(builder, orderMap);
         }
         return builder;
 
+    }
+
+    private void builderOrder(Query builder, Map<FieldInfo, OrderType> orderMap) {
+        List<Sort.Order> orderList = orderMap.entrySet().stream().map(it -> {
+            if (it.getValue() == OrderType.desc) {
+                return Sort.Order.desc(MongoQueryBuilder.buildField(it.getKey()));
+            } else {
+                return Sort.Order.asc(MongoQueryBuilder.buildField(it.getKey()));
+            }
+        }).collect(Collectors.toList());
+        builder.with(Sort.by(orderList));
+    }
+
+    private void builderExclude(Query builder, List<FieldInfo> list) {
+        Field fields = builder.fields();
+        for (FieldInfo info : list) {
+            fields.exclude(MongoQueryBuilder.buildField(info));
+        }
+    }
+
+    private void builderSelectedField(Query builder, List<FieldInfo> list) {
+        Field fields = builder.fields();
+
+        for (FieldInfo info : list) {
+            fields.include(MongoQueryBuilder.buildField(info));
+        }
     }
 
     @Override
@@ -90,11 +121,8 @@ public class MongoDao<T>  extends BaseDao<T> {
 
     @Override
     public List<T> list() {
-        if (baseWhereQuery.isEmpty()){
-            return mongoTemplate.findAll(entityCls);
-        }else{
-            return mongoTemplate.find(buildQuery(),entityCls);
-        }
+        return mongoTemplate.find(buildQuery(),entityCls);
+
     }
 
     @Override

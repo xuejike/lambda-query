@@ -20,10 +20,7 @@ public class MongoDaoFactory extends DaoFactory {
     public MongoDaoFactory(MongoTemplate mongoTemplate) {
         super(MongoDao.class);
         this.mongoTemplate = mongoTemplate;
-        init();
-    }
-    public void init(){
-        JkQueryConfig.getInstance().addDaoFactory(this);
+
     }
 
 

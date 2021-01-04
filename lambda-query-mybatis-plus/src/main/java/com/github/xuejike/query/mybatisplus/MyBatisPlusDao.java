@@ -30,8 +30,28 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
 
     }
     protected QueryWrapper<T> buildQuery(){
+        QueryWrapper<T> build = new QueryWrapper<>();
+
+        if (baseConditionsVo != null){
+            MyBatisPlusBuilder.build(build,baseConditionsVo.getWhere());
+            if (CollUtil.isNotEmpty(baseConditionsVo.getSelectList())){
+                List<FieldInfo> selectList = baseConditionsVo.getSelectList();
+                build.select(selectList.stream().map(MyBatisPlusBuilder::buildField).toArray(String[]::new));
+            }
+            if (CollUtil.isNotEmpty(baseConditionsVo.getOrderMap())){
+                Map<FieldInfo, OrderType> orderMap = baseConditionsVo.getOrderMap();
+                orderMap.entrySet().forEach(it->{
+                    if (it.getValue() == OrderType.desc){
+                        build.orderByDesc(MyBatisPlusBuilder.buildField(it.getKey()));
+                    }else{
+                        build.orderByAsc(MyBatisPlusBuilder.buildField(it.getKey()));
+                    }
+                });
+            }
+        }
+
         QueryInfo queryInfo = baseWhereQuery.buildQueryInfo();
-        QueryWrapper<T> build = MyBatisPlusBuilder.build(queryInfo);
+         MyBatisPlusBuilder.build(build,queryInfo);
         if (CollUtil.isNotEmpty(baseWhereQuery.getSelectList())){
             List<FieldInfo> selectList = baseWhereQuery.getSelectList();
             build.select(selectList.stream().map(MyBatisPlusBuilder::buildField).toArray(String[]::new));
@@ -42,7 +62,7 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
         }
         if (CollUtil.isNotEmpty(baseWhereQuery.getOrderMap())){
             Map<FieldInfo, OrderType> orderMap = baseWhereQuery.getOrderMap();
-            orderMap.entrySet().stream().forEach(it->{
+            orderMap.entrySet().forEach(it->{
                 if (it.getValue() == OrderType.desc){
                     build.orderByDesc(MyBatisPlusBuilder.buildField(it.getKey()));
                 }else{

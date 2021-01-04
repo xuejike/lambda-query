@@ -19,12 +19,12 @@ public class MyBatisPlusBuilder {
     public static<T> QueryWrapper<T> build(QueryInfo queryInfo ){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
 
-        buildOrQuery(queryWrapper,queryInfo);
+        build(queryWrapper,queryInfo);
 
 
         return queryWrapper;
     }
-    private static<T> void buildOrQuery(QueryWrapper<T> queryWrapper,QueryInfo info){
+    public static<T> void build(QueryWrapper<T> queryWrapper,QueryInfo info){
         for (QueryItem item : info.getAnd()) {
             buildField(queryWrapper,item);
         }
@@ -32,7 +32,7 @@ public class MyBatisPlusBuilder {
             for (QueryInfo queryInfo : info.getOr()) {
                 if (CollUtil.isNotEmpty(queryInfo.getOr()) || CollUtil.isNotEmpty(queryInfo.getAnd())){
                     queryWrapper.or(or->{
-                        buildOrQuery(or,queryInfo);
+                        build(or,queryInfo);
                     });
                 }
             }

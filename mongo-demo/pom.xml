@@ -55,8 +55,19 @@
         </dependency>
         <dependency>
             <groupId>com.github.xuejike</groupId>
-            <artifactId>lambda-query-mybatis-plus</artifactId>
+            <artifactId>lambda-query-mybatis-plus-starter</artifactId>
             <version>${query.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xuejike</groupId>
+            <artifactId>lambda-query-http</artifactId>
+            <version>${query.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xuejike</groupId>
+            <artifactId>lambda-query-http-starter</artifactId>
+            <version>${query.version}</version>
+
         </dependency>
     </dependencies>
     <dependencyManagement>

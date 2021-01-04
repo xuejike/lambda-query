@@ -9,13 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>lambda-query-mybatis-plus</artifactId>
+    <artifactId>lambda-query-http</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.github.xuejike</groupId>
@@ -23,22 +22,10 @@
             <version>${query.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-core</artifactId>
-            <version>3.4.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-extension</artifactId>
-            <version>3.4.1</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-extra</artifactId>
+            <artifactId>hutool-http</artifactId>
             <version>${hutool.version}</version>
-
         </dependency>
     </dependencies>
+
 </project>

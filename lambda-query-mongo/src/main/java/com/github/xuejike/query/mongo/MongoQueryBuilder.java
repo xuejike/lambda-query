@@ -23,6 +23,12 @@ public class MongoQueryBuilder {
     public static Query builder(QueryInfo queryInfo) {
         Query query = new Query();
 
+        builder(query,queryInfo);
+
+        return query;
+    }
+
+    public static void builder( Query query,QueryInfo queryInfo) {
         List<QueryItem> and = queryInfo.getAnd();
         for (QueryItem item : and) {
             Criteria where = Criteria.where(buildField(item.getField()));
@@ -35,8 +41,6 @@ public class MongoQueryBuilder {
             query.addCriteria(criteria.orOperator(criteriaArray));
 
         }
-
-        return query;
     }
 
 

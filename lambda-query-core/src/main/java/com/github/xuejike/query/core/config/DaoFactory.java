@@ -12,6 +12,10 @@ public abstract class DaoFactory {
 
     public DaoFactory(Class<?> daoCls) {
         this.daoCls = daoCls;
+        init();
+    }
+    private void init(){
+        JkQueryConfig.getInstance().addDaoFactory(this);
     }
 
     public Class<?> getDaoCls() {

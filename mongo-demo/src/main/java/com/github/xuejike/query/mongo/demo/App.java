@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @MapperScan("com.github.xuejike.query.mongo.demo.mybatis.mapper")
-@ComponentScan(basePackages={"cn.hutool.extra.spring"})
+@ComponentScan(basePackages={"cn.hutool.extra.spring","com.github.xuejike"})
 public class App {
 
     public static void main(String[] args) {

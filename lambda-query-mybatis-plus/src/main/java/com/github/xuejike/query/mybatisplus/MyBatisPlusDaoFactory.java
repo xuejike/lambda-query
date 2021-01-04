@@ -25,13 +25,9 @@ public class MyBatisPlusDaoFactory extends DaoFactory {
     public MyBatisPlusDaoFactory(Collection<BaseMapper> mapperList) {
         super(MyBatisPlusDao.class);
         this.mapperList = CollUtil.newArrayList(mapperList);
-        init();
+
 
     }
-    public void init(){
-        JkQueryConfig.getInstance().addDaoFactory(this);
-    }
-
 
     @Override
     public <T> BaseDao<T> createDao(Class<T> entityCls) {

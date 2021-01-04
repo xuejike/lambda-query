@@ -47,8 +47,7 @@ public class TestMain {
     @Autowired
     MongoTemplate mongoTemplate;
 
-    @Autowired
-    U1Mapper u1Mapper;
+
     @BeforeEach
     public void before(){
         new MyBatisPlusDaoFactory(SpringUtil.getBeansOfType(BaseMapper.class).values());
@@ -226,7 +225,7 @@ public class TestMain {
         U1 u1 = new U1();
         u1.setType("555");
         u1.setName("name2");
-        u1Mapper.insert(u1);
+
 
     }
     @Test
@@ -235,8 +234,7 @@ public class TestMain {
                 .eq(U1::getId, 1)
                 .or().eq(U1::getId,2)
                 .or(or->
-                        or.eq(U1::getId,1)
-                                .eq(U1::getName,"name1").eq(U1::getName,"666")
+                        or.eq(U1::getId,1).eq(U1::getName,"name1").eq(U1::getName,"666")
                 )
                 .list();
         System.out.println(JSON.toJSONString(list));
