@@ -3,7 +3,7 @@ package com.github.xuejike.query.core.base;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.github.xuejike.query.core.JkQuerys;
+import com.github.xuejike.query.core.JQuerys;
 import com.github.xuejike.query.core.criteria.DaoCriteria;
 import com.github.xuejike.query.core.criteria.GetDaoCriteria;
 import com.github.xuejike.query.core.criteria.IJPage;
@@ -56,7 +56,7 @@ public class MapDao<T,R> implements SelectDaoCriteria<R>, GetDaoCriteria<T> {
         ConcurrentHashMap<String, Map<Object, ?>> refMap = new ConcurrentHashMap<>(refClassMap.size());
         refClassMap.entrySet().parallelStream().forEach(entry -> {
             Set<Object> refIdList = list.stream().map(it -> ReflectUtil.getFieldValue(it, entry.getKey().getField())).collect(Collectors.toSet());
-            List<?> refList = JkQuerys.lambdaQuery(entry.getValue().getRefClass())
+            List<?> refList = JQuerys.lambdaQuery(entry.getValue().getRefClass())
                     .in(new CascadeField().subFieldName(entry.getValue().getTargetField().getField()), refIdList)
                     .list();
             Map<Object, ?> map = refList.stream().collect(Collectors.toMap(it -> ReflectUtil.getFieldValue(it, entry.getValue().getTargetField().getField()), it -> it));

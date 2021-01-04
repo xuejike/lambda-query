@@ -5,22 +5,21 @@ import com.github.xuejike.query.core.annotation.DaoSelect;
 import com.github.xuejike.query.core.base.BaseDao;
 import com.github.xuejike.query.core.config.DaoFactory;
 import com.github.xuejike.query.core.config.JkQueryConfig;
-import com.github.xuejike.query.core.criteria.DaoCriteria;
 import com.github.xuejike.query.core.exception.LambdaQueryException;
 
 /**
  * @author xuejike
  * @date 2020/12/28
  */
-public class JkQuerys {
+public class JQuerys {
 
-    public static  <T>JkLambdaQuery<T> lambdaQuery(Class<T> entityCls){
+    public static  <T> JLambdaQuery<T> lambdaQuery(Class<T> entityCls){
         JkQueryConfig instance = JkQueryConfig.getInstance();
         for (DaoFactory factory : instance.getDaoFactoryList()) {
             DaoSelect annotation = AnnotationUtil.getAnnotation(entityCls, DaoSelect.class);
             if (factory.getDaoCls() == annotation.daoCls()){
                 BaseDao<T> daoCriteria = factory.createDao(entityCls);
-                return new JkLambdaQuery<>(daoCriteria);
+                return new JLambdaQuery<>(daoCriteria);
             }
         }
 
