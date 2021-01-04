@@ -4,6 +4,10 @@
 ## 介绍
 LambdaQuery 将支持通过Lambda进行多种数据源的查询 实现java端的简单数据的统一查询
 ## 功能规划
+### 总体功能规划
+* [x] 实现基础查询功能
+* [x] 实现LoadRef功能,通过selectIn的方式进行数据表join, 实现跨服务,分布式数据库,跨不同数据库之间的join
+* [ ] 增加redisCache功能,实现在loadRef的时候 可以通过配置项进行设置是否通过cache 进行加载
 ### 1. MongoDb
 * [x] 实现基础的Lambda查询(已完成)
 * [ ] 实现 新增,删除,更新等基础操作 
