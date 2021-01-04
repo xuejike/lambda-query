@@ -32,6 +32,10 @@ public class LambdaQueryHttpConfig {
         return httpClient;
     }
 
+    public void setHttpClient(HttpClient httpClient) {
+        this.httpClient = httpClient;
+    }
+
     public String getServerBasePath() {
         return serverBasePath;
     }

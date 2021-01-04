@@ -16,8 +16,12 @@ import java.net.URI;
  */
 @Slf4j
 public class ServiceSelect {
-    @Autowired
+
     ServiceInstanceChooser loadBalancer;
+
+    public ServiceSelect(ServiceInstanceChooser loadBalancer) {
+        this.loadBalancer = loadBalancer;
+    }
 
     public URI selectUrl(String authUrl) {
         URI uri = URLUtil.toURI(authUrl);

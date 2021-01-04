@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @DaoSelect(daoCls = HttpClientDao.class)
 public @interface HttpDaoSelect {
-    String serviceName() default "";
+    String path() default "";
     String serverAddress() default "";
+
 }

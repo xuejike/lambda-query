@@ -28,7 +28,7 @@ public class HttpClientDao<T> extends BaseDao<T> {
     public HttpClientDao(Class<T> entityCls) {
         super(entityCls);
         HttpDaoSelect daoSelect = AnnotationUtil.getAnnotation(entityCls, HttpDaoSelect.class);
-        server = daoSelect.serverAddress();
+        server = daoSelect.serverAddress()+"/"+daoSelect.path();
 
     }
 

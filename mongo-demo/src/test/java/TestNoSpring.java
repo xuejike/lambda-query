@@ -18,7 +18,7 @@ public class TestNoSpring {
 
     @Test
     public void test(){
-        JkLambdaQuery<TestDoc> query = JkQuerys.lambdaQuery(TestDoc.class);
+        JkLambdaQuery<TestDoc,TestDoc> query = JkQuerys.lambdaQuery(TestDoc.class);
         List<TestDoc> list = query.eq(TestDoc::getId, "666").list();
 
     }
