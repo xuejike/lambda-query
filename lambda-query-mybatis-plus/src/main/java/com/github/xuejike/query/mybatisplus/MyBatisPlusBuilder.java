@@ -2,6 +2,7 @@ package com.github.xuejike.query.mybatisplus;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.SimpleCache;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ReflectUtil;
@@ -57,27 +58,28 @@ public class MyBatisPlusBuilder {
             Object value = entry.getValue();
             switch (entry.getKey()){
                 case eq:{
-                    queryWrapper.eq(field, getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                    queryWrapper.eq(field, getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     break;
                 }
                 case lt:
-                    queryWrapper.lt(field, getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                    queryWrapper.lt(field, getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     break;
                 case lte:
-                    queryWrapper.le(field, getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                    queryWrapper.le(field, getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     break;
                 case gt:
-                    queryWrapper.gt(field,getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                    queryWrapper.gt(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     break;
                 case gte:
-                    queryWrapper.ge(field,getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                    queryWrapper.ge(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     break;
                 case between:
                     BetweenObj betweenObj = (BetweenObj) value;
-                    queryWrapper.between(field,betweenObj.getFirst(),betweenObj.getSecond());
+                    queryWrapper.between(field,getValue(queryWrapper.getEntityClass(),item.getField(),betweenObj.getFirst()),
+                            getValue(queryWrapper.getEntityClass(),item.getField(),betweenObj.getSecond()));
                     break;
                 case ne:
-                    queryWrapper.ne(field,getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                    queryWrapper.ne(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     break;
                 case isNull:
                     queryWrapper.isNull(field);
@@ -89,19 +91,19 @@ public class MyBatisPlusBuilder {
                     if (value instanceof Collection){
                         queryWrapper.notIn(field,getValue(queryWrapper.getEntityClass(),item.getField(),getValue(queryWrapper.getEntityClass(),item.getField(),(Collection<?>) value)));
                     }else{
-                        queryWrapper.notIn(field,getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                        queryWrapper.notIn(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     }
                      break;
                 case in:
                     if (value instanceof Collection){
                         queryWrapper.in(field,getValue(queryWrapper.getEntityClass(),item.getField(),(Collection<?>) value));
                     }else{
-                        queryWrapper.in(field,getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal()));
+                        queryWrapper.in(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
                     }
 
                     break;
                 case like:
-                    queryWrapper.like(field,likeValue(getValue(queryWrapper.getEntityClass(),item.getField(),item.getVal())));
+                    queryWrapper.like(field,likeValue(getValue(queryWrapper.getEntityClass(),item.getField(),value)));
                     break;
                 default:
                     break;
@@ -136,33 +138,23 @@ public class MyBatisPlusBuilder {
 
     public static Object getValue(Class<?> entityCls,FieldInfo fieldInfo,Object val){
         Field field = ReflectUtil.getField(entityCls, fieldInfo.getField());
-        if (field != null && field.getType().isEnum()){
-            Class<? extends Enum> type = (Class<? extends Enum>) field.getType();
-            if (val instanceof String){
-                return EnumUtil.fromString(type, ((String) val));
-            }
-            if (val instanceof Number){
-                return EnumUtil.getEnumAt(type,((Number) val).intValue());
-            }
+        try {
+            return  Convert.convert(field.getType(),val);
+        }catch (Exception ex){
+            return val;
         }
-        return val;
+
     }
     public static Object getValue(Class<?> entityCls,FieldInfo fieldInfo,Collection<?> val){
         Field field = ReflectUtil.getField(entityCls, fieldInfo.getField());
-        if (field != null && field.getType().isEnum()){
-            Class<? extends Enum> type = (Class<? extends Enum>) field.getType();
-            return val.stream().map(it->{
-                if (it instanceof String){
-                    return EnumUtil.fromString(type, ((String) it));
-                }
-                if (it instanceof Number){
-                    return EnumUtil.getEnumAt(type,((Number) it).intValue());
-                }
-                return it;
-            }).collect(Collectors.toList());
 
-        }
-        return val;
+        return val.stream().map(it-> {
+            try {
+                return Convert.convert(field.getType(),it);
+            }catch (Exception ex){
+                return it;
+            }
+        }).collect(Collectors.toList());
     }
     private static String likeValue(Object val){
         if (val instanceof LikeValObj){

@@ -23,6 +23,6 @@ public class JQuerys {
             }
         }
 
-        throw new LambdaQueryException("not find dao ");
+        throw new LambdaQueryException("not find dao {}",entityCls.getName());
     }
 }

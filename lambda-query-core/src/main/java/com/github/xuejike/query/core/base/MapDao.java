@@ -55,6 +55,7 @@ public class MapDao<T,R> implements SelectDaoCriteria<R>, GetDaoCriteria<T> {
         long begin = System.currentTimeMillis();
         ConcurrentHashMap<String, Map<Object, ?>> refMap = new ConcurrentHashMap<>(refClassMap.size());
         refClassMap.entrySet().parallelStream().forEach(entry -> {
+
             Set<Object> refIdList = list.stream().map(it -> ReflectUtil.getFieldValue(it, entry.getKey().getField())).collect(Collectors.toSet());
             List<?> refList = JQuerys.lambdaQuery(entry.getValue().getRefClass())
                     .in(new CascadeField().subFieldName(entry.getValue().getTargetField().getField()), refIdList)
