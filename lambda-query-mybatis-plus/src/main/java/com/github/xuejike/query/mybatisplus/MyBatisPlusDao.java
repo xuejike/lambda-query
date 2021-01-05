@@ -34,7 +34,7 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
         build.setEntityClass(entityCls);
 
         if (baseConditionsVo != null){
-            MyBatisPlusBuilder.build(build,baseConditionsVo.getWhere());
+            MyBatisPlusBuilder.build(entityCls,build,baseConditionsVo.getWhere());
             if (CollUtil.isNotEmpty(baseConditionsVo.getSelectList())){
                 List<FieldInfo> selectList = baseConditionsVo.getSelectList();
                 build.select(selectList.stream().map(it->MyBatisPlusBuilder.buildField(entityCls,it)).toArray(String[]::new));
@@ -52,7 +52,7 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
         }
 
         QueryInfo queryInfo = baseWhereQuery.buildQueryInfo();
-         MyBatisPlusBuilder.build(build,queryInfo);
+         MyBatisPlusBuilder.build(entityCls,build,queryInfo);
         if (CollUtil.isNotEmpty(baseWhereQuery.getSelectList())){
             List<FieldInfo> selectList = baseWhereQuery.getSelectList();
             build.select(selectList.stream().map(it->MyBatisPlusBuilder.buildField(entityCls,it)).toArray(String[]::new));

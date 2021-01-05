@@ -28,58 +28,58 @@ import java.util.stream.Collectors;
 public class MyBatisPlusBuilder {
     static SimpleCache<Class<?>,Map<String,String>> entityMap = new SimpleCache<Class<?>,Map<String,String>>();
 
-    public static<T> QueryWrapper<T> build(QueryInfo queryInfo ){
+    public static<T> QueryWrapper<T> build(Class<?> entityCls,QueryInfo queryInfo ){
         QueryWrapper<T> queryWrapper = new QueryWrapper<>();
 
-        build(queryWrapper,queryInfo);
+        build(entityCls,queryWrapper,queryInfo);
 
 
         return queryWrapper;
     }
-    public static<T> void build(QueryWrapper<T> queryWrapper,QueryInfo info){
+    public static<T> void build(Class<?> entityCls,QueryWrapper<T> queryWrapper,QueryInfo info){
         for (QueryItem item : info.getAnd()) {
-            buildField(queryWrapper,item);
+            buildField(entityCls,queryWrapper,item);
         }
         if (CollUtil.isNotEmpty(info.getOr())){
             for (QueryInfo queryInfo : info.getOr()) {
                 if (CollUtil.isNotEmpty(queryInfo.getOr()) || CollUtil.isNotEmpty(queryInfo.getAnd())){
                     queryWrapper.or(or->{
-                        build(or,queryInfo);
+                        build(entityCls,or,queryInfo);
                     });
                 }
             }
         }
     }
 
-    private static <T> void buildField(QueryWrapper<T> queryWrapper, QueryItem item) {
-        String field = buildField(queryWrapper.getEntityClass(),item.getField());
+    private static <T> void buildField(Class<?> entityCls,QueryWrapper<T> queryWrapper, QueryItem item) {
+        String field = buildField(entityCls,item.getField());
 
         for (Map.Entry<WhereOperation, Object> entry : item.getVal().entrySet()) {
             Object value = entry.getValue();
             switch (entry.getKey()){
                 case eq:{
-                    queryWrapper.eq(field, getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                    queryWrapper.eq(field, getValue(entityCls,item.getField(),value));
                     break;
                 }
                 case lt:
-                    queryWrapper.lt(field, getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                    queryWrapper.lt(field, getValue(entityCls,item.getField(),value));
                     break;
                 case lte:
-                    queryWrapper.le(field, getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                    queryWrapper.le(field, getValue(entityCls,item.getField(),value));
                     break;
                 case gt:
-                    queryWrapper.gt(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                    queryWrapper.gt(field,getValue(entityCls,item.getField(),value));
                     break;
                 case gte:
-                    queryWrapper.ge(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                    queryWrapper.ge(field,getValue(entityCls,item.getField(),value));
                     break;
                 case between:
                     BetweenObj betweenObj = (BetweenObj) value;
-                    queryWrapper.between(field,getValue(queryWrapper.getEntityClass(),item.getField(),betweenObj.getFirst()),
-                            getValue(queryWrapper.getEntityClass(),item.getField(),betweenObj.getSecond()));
+                    queryWrapper.between(field,getValue(entityCls,item.getField(),betweenObj.getFirst()),
+                            getValue(entityCls,item.getField(),betweenObj.getSecond()));
                     break;
                 case ne:
-                    queryWrapper.ne(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                    queryWrapper.ne(field,getValue(entityCls,item.getField(),value));
                     break;
                 case isNull:
                     queryWrapper.isNull(field);
@@ -89,21 +89,21 @@ public class MyBatisPlusBuilder {
                     break;
                 case notIn:
                     if (value instanceof Collection){
-                        queryWrapper.notIn(field,getValue(queryWrapper.getEntityClass(),item.getField(),getValue(queryWrapper.getEntityClass(),item.getField(),(Collection<?>) value)));
+                        queryWrapper.notIn(field,getValue(entityCls,item.getField(),getValue(entityCls,item.getField(),(Collection<?>) value)));
                     }else{
-                        queryWrapper.notIn(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                        queryWrapper.notIn(field,getValue(entityCls,item.getField(),value));
                     }
                      break;
                 case in:
                     if (value instanceof Collection){
-                        queryWrapper.in(field,getValue(queryWrapper.getEntityClass(),item.getField(),(Collection<?>) value));
+                        queryWrapper.in(field,getValue(entityCls,item.getField(),(Collection<?>) value));
                     }else{
-                        queryWrapper.in(field,getValue(queryWrapper.getEntityClass(),item.getField(),value));
+                        queryWrapper.in(field,getValue(entityCls,item.getField(),value));
                     }
 
                     break;
                 case like:
-                    queryWrapper.like(field,likeValue(getValue(queryWrapper.getEntityClass(),item.getField(),value)));
+                    queryWrapper.like(field,likeValue(getValue(entityCls,item.getField(),value)));
                     break;
                 default:
                     break;
