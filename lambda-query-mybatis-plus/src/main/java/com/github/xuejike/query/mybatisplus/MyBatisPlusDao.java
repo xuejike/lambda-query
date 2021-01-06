@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author xuejike
  * @date 2020/12/28
  */
-public class MyBatisPlusDao<T> extends BaseDao<T> {
+public class MyBatisPlusDao<T> extends BaseDao<T,QueryWrapper<T>> {
     BaseMapper<T> baseMapper;
 
 
@@ -29,7 +29,8 @@ public class MyBatisPlusDao<T> extends BaseDao<T> {
         this.baseMapper = baseMapper;
 
     }
-    protected QueryWrapper<T> buildQuery(){
+    @Override
+    public QueryWrapper<T> buildQuery(){
         QueryWrapper<T> build = new QueryWrapper<T>();
         build.setEntityClass(entityCls);
 

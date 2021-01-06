@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class MapDao<T,R> implements SelectDaoCriteria<R>, GetDaoCriteria<T> {
 
-    private BaseDao<T> daoCriteria;
+    private BaseDao<T,?> daoCriteria;
     private Class<R> resultCls;
 
-    public MapDao(BaseDao<T> daoCriteria, Class<R> resultCls) {
+    public MapDao(BaseDao<T,?> daoCriteria, Class<R> resultCls) {
         this.daoCriteria = daoCriteria;
         this.resultCls = resultCls;
     }

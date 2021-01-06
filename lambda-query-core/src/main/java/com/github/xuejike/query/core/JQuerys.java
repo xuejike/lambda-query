@@ -18,7 +18,7 @@ public class JQuerys {
         for (DaoFactory factory : instance.getDaoFactoryList()) {
             DaoSelect annotation = AnnotationUtil.getAnnotation(entityCls, DaoSelect.class);
             if (factory.getDaoCls() == annotation.daoCls()){
-                BaseDao<T> daoCriteria = factory.createDao(entityCls);
+                BaseDao<T,?> daoCriteria = factory.createDao(entityCls);
                 return new JLambdaQuery<>(daoCriteria);
             }
         }

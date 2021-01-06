@@ -28,5 +28,5 @@ public abstract class DaoFactory {
      * @param <T>
      * @return
      */
-    abstract public <T> BaseDao<T> createDao(Class<T> entityCls);
+    abstract public <T> BaseDao<T,?> createDao(Class<T> entityCls);
 }

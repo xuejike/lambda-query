@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author xuejike
  * @date 2020/12/28
  */
-public abstract class BaseDao<T> implements DaoCriteria<T> , InjectionBaseQuery {
+public abstract class BaseDao<T,Q> implements DaoCriteria<T> , InjectionBaseQuery {
     protected BaseWhereQuery baseWhereQuery;
     protected Class<T> entityCls;
     protected BaseConditionsVo baseConditionsVo;
@@ -28,6 +28,12 @@ public abstract class BaseDao<T> implements DaoCriteria<T> , InjectionBaseQuery 
         this.entityCls = entityCls;
     }
 
+
+    /**
+     * 构建查询器
+     * @return
+     */
+    public abstract Q buildQuery();
 
     public void setBaseConditionsVo(BaseConditionsVo baseConditionsVo) {
         this.baseConditionsVo = baseConditionsVo;

@@ -15,9 +15,9 @@ import java.util.Arrays;
  * @date 2020/12/18
  */
 public class JLambdaQuery<T> extends BaseNestedWhereQuery<T, FieldFunction<T,?>, JLambdaQuery<T>> implements DaoCriteria<T> , OrderCriteria<FieldFunction<T,?>, JLambdaQuery<T>>, MapCriteria {
-    private BaseDao<T> daoCriteria;
+    private BaseDao<T,?> daoCriteria;
 
-    public JLambdaQuery(BaseDao<T> daoCriteria) {
+    public JLambdaQuery(BaseDao<T,?> daoCriteria) {
         this.daoCriteria = daoCriteria;
         if (daoCriteria != null){
             ((InjectionBaseQuery) daoCriteria).injectionBaseWhereQuery(this);

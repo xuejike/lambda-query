@@ -21,7 +21,7 @@ import java.util.Map;
  * @author xuejike
  * @date 2020/12/31
  */
-public class HttpClientDao<T> extends BaseDao<T> {
+public class HttpClientDao<T> extends BaseDao<T,HttpBodyVo> {
 
     private final String server;
 
@@ -30,6 +30,11 @@ public class HttpClientDao<T> extends BaseDao<T> {
         HttpDaoSelect daoSelect = AnnotationUtil.getAnnotation(entityCls, HttpDaoSelect.class);
         server = daoSelect.serverAddress()+"/"+daoSelect.path();
 
+    }
+
+    @Override
+    public HttpBodyVo buildQuery() {
+        return buildHttpBody();
     }
 
 

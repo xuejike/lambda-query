@@ -13,7 +13,7 @@ public class HttpClientFactory extends DaoFactory {
     }
 
     @Override
-    public <T> BaseDao<T> createDao(Class<T> entityCls) {
+    public <T> BaseDao<T,?> createDao(Class<T> entityCls) {
         return new HttpClientDao<>(entityCls);
     }
 }

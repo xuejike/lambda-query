@@ -30,7 +30,7 @@ public class MyBatisPlusDaoFactory extends DaoFactory {
     }
 
     @Override
-    public <T> BaseDao<T> createDao(Class<T> entityCls) {
+    public <T> BaseDao<T,?> createDao(Class<T> entityCls) {
         if (!mapperMap.containsKey(entityCls)){
             for (BaseMapper mapper : mapperList) {
                 Type[] genericInterfaces = mapper.getClass().getGenericInterfaces();

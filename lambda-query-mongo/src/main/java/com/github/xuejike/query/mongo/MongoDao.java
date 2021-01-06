@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @author xuejike
  * @date 2020/12/18
  */
-public class MongoDao<T>  extends BaseDao<T> {
+public class MongoDao<T>  extends BaseDao<T,Query> {
     MongoTemplate mongoTemplate;
 
 
@@ -38,7 +38,8 @@ public class MongoDao<T>  extends BaseDao<T> {
     }
 
 
-    private Query buildQuery(){
+    @Override
+    public Query buildQuery(){
         Query builder = new Query();
         if (baseConditionsVo != null){
             MongoQueryBuilder.builder(builder,baseConditionsVo.getWhere());
