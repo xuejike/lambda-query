@@ -107,7 +107,7 @@ LambdaQuery 将支持通过Lambda进行多种数据源的查询 实现java端的
 ```
 ### 2.Mongo查询器使用
 
-1. 创建实体类
+#### 1. 创建实体类
 
 ```java
 @Document("demo_doc")
@@ -131,7 +131,8 @@ public class TestDoc {
 
 ```
 
-2. 进行查询
+#### 2. 进行查询
+##### 基础查询
 ```java
 /**
  * == 查询
@@ -261,7 +262,35 @@ public CascadeField<TestDoc,TestDoc> of(){
         }
 
 ```
+##### loadJoin 查询
+采用selectIn 和并行计算方式进行 join查询合并
 
+```java
+    @GetMapping("list")
+    public Object testList(){
+        JLambdaQuery<HttpEntity> query = JQuerys.lambdaQuery(HttpEntity.class);
+        Object list = query.or().eq(HttpEntity::getName,"name1").or()
+                .eq(HttpEntity::getName,"name2")
+        // 属性 u2Id 关联实体 U2 的id字段,并映射结果到U1Vo
+                .loadRef(HttpEntity::getU2Id, U2.class,U2::getId).map(U1Vo.class).list();
+        return list;
+    }
+
+```
+```java
+@Data
+public class U1Vo {
+    private Long id;
+    private String name;
+    private String type;
+    @SetRefValue("u2")
+    private Long u2Id;
+    @RefValue("#u2.name")
+    private String u2Name;
+}
+
+
+```
 
 ### 3.MybatisPlus查询器使用
 

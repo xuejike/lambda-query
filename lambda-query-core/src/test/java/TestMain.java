@@ -1,6 +1,10 @@
 import cn.hutool.core.util.ReflectUtil;
 import com.github.xuejike.query.core.tool.ELParseTool;
+import net.sf.cglib.beans.BeanCopier;
+import net.sf.cglib.beans.BeanGenerator;
+import net.sf.cglib.reflect.FastClass;
 import org.junit.jupiter.api.Test;
+import vo.TestSourceVo;
 import vo.TestVo;
 
 import java.lang.invoke.MethodHandle;
@@ -16,6 +20,9 @@ import java.util.Map;
  * @date 2020/12/31
  */
 public class TestMain {
+
+    private long forLen;
+
     @Test
     public void parseClsTest(){
 //        ELParseTool.parseSetRefValue(TestVo.class);
@@ -28,7 +35,8 @@ public class TestMain {
     public void xnTest() throws Throwable {
 
         Long begin = System.currentTimeMillis();
-        for (long i = 0; i < 1000000000L; i++) {
+        forLen = 1000000000L;
+        for (long i = 0; i < forLen; i++) {
             TestVo testVo = new TestVo();
             testVo.setName("1111111");
         }
@@ -42,13 +50,29 @@ public class TestMain {
         Constructor<TestVo> constructor = ReflectUtil.getConstructor(TestVo.class);
         begin = System.currentTimeMillis();
 
-        for (long i = 0; i < 1000000000L; i++) {
+        for (long i = 0; i < forLen; i++) {
 //            TestVo testVo = new TestVo();
-            TestVo testVo = (TestVo)mh.invokeExact();
+//            TestVo testVo = (TestVo)mh.invokeExact();
 //            TestVo testVo = constructor.newInstance();
-//            TestVo testVo = ReflectUtil.newInstance(TestVo.class);
+            TestVo testVo = ReflectUtil.newInstance(TestVo.class);
 //            ReflectUtil.setFieldValue(testVo,nameField,"1111111");
-            nameField.set(testVo,"1111111");
+//            nameField.set(testVo,"1111111");
+        }
+        System.out.println("-->"+(System.currentTimeMillis()-begin));
+
+
+        BeanCopier beanCopier = BeanCopier.create(TestSourceVo.class, TestVo.class,true);
+
+        FastClass fastClass = FastClass.create(TestVo.class);
+        begin = System.currentTimeMillis();
+        for (long i = 0; i < forLen; i++) {
+//            TestVo testVo = new TestVo();
+//            TestVo testVo = (TestVo)mh.invokeExact();
+//            TestVo testVo = constructor.newInstance();
+            Object o = fastClass.newInstance();
+
+//            ReflectUtil.setFieldValue(testVo,nameField,"1111111");
+//            nameField.set(testVo,"1111111");
         }
         System.out.println("-->"+(System.currentTimeMillis()-begin));
 
