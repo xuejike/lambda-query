@@ -130,9 +130,31 @@ public class TestDoc {
 }
 
 ```
+ 
+ 
+### 2.MybatisPlus查询器使用
 
-#### 2. 进行查询
-##### 基础查询
+mybatis-plus 实体初始化
+
+```java
+@Data
+@TableName("u1")
+@MyBatisPlusDaoSelect
+public class U1 {
+    @TableId(type = IdType.AUTO)
+    private Long id;
+    private String name;
+    private String type;
+
+}
+
+
+```
+
+## 功能说明
+
+### 1. 基础查询功能
+
 ```java
 /**
  * == 查询
@@ -248,6 +270,13 @@ public void testOrder(){
         Assertions.assertEquals(list.get(1).getNum(),1);
         }
 
+
+```
+
+### 2. 二级字段查询&json 字段查询(未完成)
+
+```java
+
 /**
  * 二级字段查询
  */
@@ -262,7 +291,9 @@ public CascadeField<TestDoc,TestDoc> of(){
         }
 
 ```
-##### loadJoin 查询
+
+### 3. loadJoin 功能查询
+
 采用selectIn 和并行计算方式进行 join查询合并
 
 ```java
@@ -287,25 +318,6 @@ public class U1Vo {
     private Long u2Id;
     @RefValue("#u2.name")
     private String u2Name;
-}
-
-
-```
-
-### 3.MybatisPlus查询器使用
-
-mybatis-plus 实体初始化
-
-```java
-@Data
-@TableName("u1")
-@MyBatisPlusDaoSelect
-public class U1 {
-    @TableId(type = IdType.AUTO)
-    private Long id;
-    private String name;
-    private String type;
-
 }
 
 
