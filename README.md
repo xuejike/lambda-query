@@ -151,6 +151,40 @@ public class U1 {
 
 ```
 
+
+### 3. HTTP查询器
+
+1. 暴露接口
+```java
+    @PostConstruct
+    public void init(){
+        LambdaQueryHttpConfig.getInstance().registerService("u1", U1.class);
+        HttpClientFactory httpClientFactory = new HttpClientFactory();
+    }
+```
+
+2. 定义查询器
+```java
+@HttpDaoSelect( serverAddress = "http://127.0.0.1:7000",path = "/lambda/u1/")
+@Data
+public class HttpEntity {
+    private Long id;
+    private String name;
+    private String type;
+    private Long u2Id;
+}
+
+
+```
+
+3. 使用查询功能
+```java
+    @Test
+    public void list(){
+        JQuerys.lambdaQuery(HttpRequest.class).eq(HttpRequest::getName,"xxx").eq(HttpRequest::getUserName,"un").list();
+    }
+```
+
 ## 功能说明
 
 ### 1. 基础查询功能
